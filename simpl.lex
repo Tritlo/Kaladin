@@ -17,6 +17,7 @@
 "value"                             return "v";
 "let"                               return "l";
 "be"                                return "b";
+"in"                                return "in";
 "if not,"                           return "else";
 "if"                                return "i";
 "else"                              return "else";
