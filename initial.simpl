@@ -1,0 +1,14 @@
+This refers to both binary search and bubble sort (These are import statements).
+    
+    The following is called "an example", which takes in the value e, and the value g.
+Let a be 5, c be 3, and b be 2 (These are examples of a decleration, and this is a comment).
+If a > c then add 1 to a, add 2 to c, and mutiply b by 2 (This is an if statement).
+If not, then subtract 1 from a (This is an else statement).
+While b is not a then add 1 to b, divide a by 2, and write out both b and a.
+Finally, write out a.
+
+    The following is called "quicksort", which takes in the value a.
+Let c and d be [] and [].  Let q be the first item in a.
+For each item in a then if the item is less than q, then put it in c, else put it in b.
+Now quicksort a and quicksort b, then append q to a.
+Finally, return b appended to a.

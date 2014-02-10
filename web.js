@@ -1,14 +1,18 @@
 function lex (){
     var t = $("#input").val();
     console.log(t);
-    jeb.setInput(t);
+    simpl.setInput(t);
     var next = 0;
     var output = [];
+    var matches = [];
     while(next !== 1){
 	this.yy = false;
-	next = jeb.next();
-	output.push(next);
-	console.log(next);
+	next = simpl.lex();
+	if(next && next !== "T" && next !== "NL"){
+	    var match = simpl.match;
+	    output.push(next);
+	    matches.push(match);
+	}
    }
     $("#out").empty();
     //$("#out").append("<ul class='list-group'>");
@@ -21,7 +25,7 @@ function lex (){
             current = $("<div class='col-sm-4'>");
 	    
 	    }
-	list.append("<li class='list-group-item'>"+output[i]+"</li>");
+	list.append("<li class='list-group-item'>"+matches[i] + "_ | _" + output[i] +"</li>");
 	if (i% 5 ==0){
 	    current.append(list);
 	    currents.push(current);
@@ -36,6 +40,6 @@ function lex (){
 
 
 $(document).ready(function (){
-    $.get("initial.jeb",success=function(data){$("#input").val(data)});
+    $.get("initial.simpl",success=function(data){$("#input").val(data)});
     $("#lex").click(function(evt){lex();});
 });

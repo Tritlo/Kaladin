@@ -1,14 +1,14 @@
 var fs = require("fs");
 
-eval(fs.readFileSync("./jeb.js")+'');
+eval(fs.readFileSync("./simpl.js")+'');
 
-//jeb.setInput(fs.readFileSync("./initial.jeb")+"");
-jeb.setInput(fs.readFileSync("./sec.jeb")+"");
+//simpl.setInput(fs.readFileSync("./initial.simpl")+"");
+simpl.setInput(fs.readFileSync("./initial.simpl")+"");
 
 var next = 0;
 while (next !== 1){
-    jeb.yy = false;
-    next = jeb.next();
+    simpl.yy = false;
+    next = simpl.next();
     console.log(next);
     
 }

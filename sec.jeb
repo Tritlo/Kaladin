@@ -1,5 +1,0 @@
-#Hey
-infl:
-    heyhey: 1
-    when a < 1:
-        print "wat"
