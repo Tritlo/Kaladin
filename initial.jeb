@@ -1,0 +1,75 @@
+# Variables that should be monitored
+angle := 0
+throttle := 0
+speed := 0
+altitude := 0
+
+#This is a comment
+#This is a listener
+#If something else calls a
+#set command on a parameter in
+#a when statement of this listener,
+#it gets called for that listener
+
+inFlight:
+    #Internal variables
+    status: 1
+    
+    #Only false and None are false
+    accomplishments: None
+    
+    when height > 2 or speed is 25 and angle < 25:
+    	 #set is used to change monitored variables
+	 set angle 45
+	 set throttle 59
+	 #Wait sets the things that are
+	 # contained within in an anonymous listener
+	 # if called with a numeber, starts a millisecond timer
+	 wait 5000:
+	    killEngine
+	if true:
+	    print "true"
+	else:
+	    print "error!"
+	 
+    when altitude >= 15000:
+    	 if angle  > 50:
+	    set angle 50
+	    set status 2
+	else:
+	    print "still good"
+
+
+multiply x y :
+    return x*y
+
+    
+onLaunch:
+   when altitude is not 0:
+   	#Listeners are activated
+   	activate inFlight
+
+onLanding:
+   when altitude is 0:
+   	#And listeners are deactivated
+   	deactivate inFlight
+
+initialListeners = [onLaunch onLanding]
+
+#Here item takes on each value in initialLister list
+#If initial listener was an object, item
+#would take on the value of each of it's keys
+for item in initialListeners:
+    listener = item
+    #Calling a listener as a function
+    #Returns that variable of
+    #the listener
+    if listener isActive:
+       stop
+    activate listener
+
+#Equals declares non listenable variables
+i = 0
+while true:
+    if not false:
+        stop
