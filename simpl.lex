@@ -9,7 +9,7 @@
 \(.+\)                              return "//";
 \"[^\"]*\"                          return "str";
 "This refers to"                    return "import";
-"both"                              return "b";
+"both"                              return "b"; //Used for having only two values, where OA would be weird.
 "The following is called"           return "def";
 "the"                               return "t";
 ", which takes in"                  return "args";
