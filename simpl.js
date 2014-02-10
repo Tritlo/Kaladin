@@ -338,7 +338,7 @@ case 4:return "str";
 break;
 case 5:return "import";
 break;
-case 6:return "b";
+case 6:return "b"; //Used for having only two values, where OA would be weird.
 break;
 case 7:return "def";
 break;
@@ -358,58 +358,60 @@ case 14:return "else";
 break;
 case 15:return "i";
 break;
-case 16:return "th";
+case 16:return "else";
 break;
-case 17:return "w";
+case 17:return "th";
 break;
-case 18:return "to";
+case 18:return "w";
 break;
-case 19:return "by";
+case 19:return "to";
 break;
-case 20:return "frm";
+case 20:return "by";
 break;
-case 21:return ">=";
+case 21:return "frm";
 break;
-case 22:return ">";
+case 22:return ">=";
 break;
-case 23:return "<=";
+case 23:return ">";
 break;
-case 24:return "<";
+case 24:return "<=";
 break;
-case 25:return "!";
+case 25:return "<";
 break;
-case 26:return "&&";
+case 26:return "!";
 break;
-case 27:return "||";
+case 27:return "&&";
 break;
-case 28:return "==";
+case 28:return "||";
 break;
-case 29:return "F";
+case 29:return "==";
 break;
-case 30:return "N";
+case 30:return "F";
 break;
-case 31:return "ret";
+case 31:return "N";
 break;
-case 32:return "comp";
+case 32:return "ret";
 break;
-case 33:return 'num';
+case 33:return "comp";
 break;
-case 34:return "dot";
+case 34:return 'num';
 break;
-case 35:return ",";
+case 35:return "dot";
 break;
-case 36:return "id";
+case 36:return ",";
 break;
-case 37:return 'EOF';
+case 37:return "id";
 break;
-case 38:expressions
+case 38:return 'EOF';
 break;
-case 39:console.log(yy_.yytext);
+case 39:expressions
+break;
+case 40:console.log(yy_.yytext);
 break;
 }
 },
-rules: [/^(?:\n)/i,/^(?:\t)/i,/^(?:\s)/i,/^(?:\(.+\))/i,/^(?:"[^\"]*")/i,/^(?:This refers to)/i,/^(?:both)/i,/^(?:The following is called)/i,/^(?:the)/i,/^(?:, which takes in)/i,/^(?:, and)/i,/^(?:value)/i,/^(?:let)/i,/^(?:be)/i,/^(?:if not,)/i,/^(?:if)/i,/^(?:then)/i,/^(?:while)/i,/^(?:to)/i,/^(?:by)/i,/^(?:from)/i,/^(?:is greater than or equal to)/i,/^(?:is greater than)/i,/^(?:is less than or equal to)/i,/^(?:is less than)/i,/^(?:not)/i,/^(?:and)/i,/^(?:or)/i,/^(?:is)/i,/^(?:finally)/i,/^(?:Now)/i,/^(?:return)/i,/^(?:[\<\>][\=]?)/i,/^(?:[0-9]+(\.[0-9]+)?\b)/i,/^(?:\.)/i,/^(?:,)/i,/^(?:[A-z](([A-z0-9])+)?)/i,/^(?:$)/i,/^(?:(?=lex)start)/i,/^(?:.)/i],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39],"inclusive":true}}
+rules: [/^(?:\n)/i,/^(?:\t)/i,/^(?:\s)/i,/^(?:\(.+\))/i,/^(?:"[^\"]*")/i,/^(?:This refers to)/i,/^(?:both)/i,/^(?:The following is called)/i,/^(?:the)/i,/^(?:, which takes in)/i,/^(?:, and)/i,/^(?:value)/i,/^(?:let)/i,/^(?:be)/i,/^(?:if not,)/i,/^(?:if)/i,/^(?:else)/i,/^(?:then)/i,/^(?:while)/i,/^(?:to)/i,/^(?:by)/i,/^(?:from)/i,/^(?:is greater than or equal to)/i,/^(?:is greater than)/i,/^(?:is less than or equal to)/i,/^(?:is less than)/i,/^(?:not)/i,/^(?:and)/i,/^(?:or)/i,/^(?:is)/i,/^(?:finally)/i,/^(?:Now)/i,/^(?:return)/i,/^(?:[\<\>][\=]?)/i,/^(?:[0-9]+(\.[0-9]+)?\b)/i,/^(?:\.)/i,/^(?:,)/i,/^(?:[A-z](([A-z0-9])+)?)/i,/^(?:$)/i,/^(?:(?=lex)start)/i,/^(?:.)/i],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40],"inclusive":true}}
 };
 return lexer;
 })();

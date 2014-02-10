@@ -19,6 +19,7 @@
 "be"                                return "b";
 "if not,"                           return "else";
 "if"                                return "i";
+"else"                              return "else";
 "then"                              return "th";
 "while"                             return "w";
 "to"                                return "to";
