@@ -27,7 +27,7 @@
 "nil"                    return "N";
 \"[^\"]*\"               return "s";
 [0-9]+("."[0-9]+)?\b     return "n";
-[A-Za-z]([A-Za-z0-9])*   return "i";
+[A-Za-z]([A-Za-z0-9])*   return "nom";
 "="                      return "=";
 "^"                      return '^';
 "*"                      return '*';
