@@ -1,14 +1,14 @@
 var fs = require("fs");
 
-eval(fs.readFileSync("./simpl.js")+'');
+eval(fs.readFileSync("./kaladin.js")+'');
 
-//simpl.setInput(fs.readFileSync("./initial.simpl")+"");
-simpl.setInput(fs.readFileSync("./initial.simpl")+"");
+//kaladin.setInput(fs.readFileSync("./initial.kaladin")+"");
+kaladin.setInput(fs.readFileSync("./initial.kal")+"");
 
 var next = 0;
 while (next !== 1){
-    simpl.yy = false;
-    next = simpl.next();
+    kaladin.yy = false;
+    next = kaladin.next();
     console.log(next);
     
 }
