@@ -16,7 +16,7 @@
 "is"                     return "=";
 "true"                   return "1";
 "false"                  return "0";
-"in"                     return "e";
+"in"                     return ">";
 "["                      return "[";
 "]"                      return "]";
 "_"                      return "_";
