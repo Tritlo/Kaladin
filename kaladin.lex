@@ -28,7 +28,7 @@
 \"[^\"]*\"               return "s";
 [0-9]+("."[0-9]+)?\b     return "n";
 [A-Za-z]([A-Za-z0-9])*   return "i";
-"="                      return "d";
+"="                      return "=";
 "^"                      return '^';
 "*"                      return '*';
 "/"                      return '/';
@@ -43,7 +43,6 @@
 /lex
 %left '+' '-'
 %left '*' '/'
-%right "n"
 
 %start expressions
 

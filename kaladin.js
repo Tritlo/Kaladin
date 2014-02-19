@@ -606,7 +606,7 @@ case 24:return "n";
 break;
 case 25:return "i";
 break;
-case 26:return "d";
+case 26:return "=";
 break;
 case 27:return '^';
 break;
