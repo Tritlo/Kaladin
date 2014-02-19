@@ -29,12 +29,27 @@
 [0-9]+("."[0-9]+)?\b     return "n";
 [A-Za-z]([A-Za-z0-9])*   return "i";
 "="                      return "d";
-[\*\+\|\&\^\/\-]         return "o";
+"**"                      return '^';
+"*"                      return '*';
+"/"                      return '/';
+"-"                      return '-';
+"+"                      return '+';
 \:                       return ":";
 \;                       return ";";
 [\<\>][\=]?              return "c";                 
 <<EOF>>                  return 'F';
 
 /lex
+%left '+' '-'
+%left '*' '/'
+
 %start expressions
+
+%% //grammar %%
+expressions
+    : e EOF
+        {}
+    ;
+
+
 %%
