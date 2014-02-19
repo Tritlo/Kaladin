@@ -22,9 +22,17 @@ function lex (){
     
 }
 
+function parse(){
+    p = kaladin.parse($("#input").val());
+    if (p){
+	alert("Parsing successful!");
+    };
+};
 
 
 $(document).ready(function (){
     $.get("initial.kal",success=function(data){$("#input").val(data);});
     $("#lex").click(function(evt){lex();});
+    $("#parse").click(function(evt){parse();});
+    window.onerror = alert;
 });

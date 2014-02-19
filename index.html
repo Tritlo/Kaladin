@@ -4,14 +4,15 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <link href=" //cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="main.css" rel="stylesheet">
 <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
 <nav class="navbar navbar-default">
   <div class="navbar-header">
     <a class="navbar-brand" href="#">Kaladin</a>
     </div>
   <ul class="nav navbar-nav">
-    <li class="active"> <a href="#">Lexer Demo</a></li>
-    <li> <a href="kaladin.lex">Language definition</a></li>
+    <li class="active"> <a href="#">Lexer/Parser Demo</a></li>
+    <li> <a href="kaladin.jison">Language definition</a></li>
     <li> <a href="kaladin.js">Lexer/Parser</a></li>
     <li> <a href="https://github.com/Tritlo/Kaladin">GitHub</a></li>
   </ul>
@@ -24,7 +25,10 @@
 <body>
 <div class="container">
     <textarea id="input" rows="30" cols="80" class="form-control"></textarea>
-    <input type="button" id="lex" value="Lex" class="form-control"></input>
+    <div id="buttons">
+	<input type="button" id="lex" value="Lex" class="btn btn-default btn-lg"></input>
+	<input type="button" id="parse" value="Parse" class="btn btn-default btn-lg"></input>
+    </div>
     <div class="panel panel-primary">
 	<div class="panel-heading">
 	  <h6 class="panel-title">Output </h6>
