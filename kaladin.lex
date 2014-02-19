@@ -34,6 +34,7 @@
 "/"                      return '/';
 "-"                      return '-';
 "+"                      return '+';
+"$"                      return "$";
 \:                       return ":";
 \;                       return ";";
 [\<\>][\=]?              return "c";                 

@@ -12,7 +12,7 @@ main = {
      
      y = if x > 2 and y is nil then 5 else 7
      
-     li = [5,2,3,7,5]
+     li = [5 2 3 7 5]
      z = while y in li then pop li else li
      
      #Everything but false and nil is true
