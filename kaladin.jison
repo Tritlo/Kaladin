@@ -44,9 +44,6 @@
 <<EOF>>                  return 'EOF';
 
 /lex
-%left '+' '-'
-%left '*' '/'
-%left '^'
 %start expressions
 
 
@@ -68,6 +65,7 @@
 %token ELSE
 %token ELSEIF
 
+%right '='
 %left '+', '-'
 %left '*', '/'
 %left '^'
@@ -77,7 +75,7 @@
 expressions: program EOF;
 
 
-op: '*' | '+' | '-' | '^' | '/' | COMP;
+op: '*' | '+' | '-' | '^' | '/';
 
 program: program function ';'
 	| function ';';
@@ -102,18 +100,25 @@ ifst: IF '(' cond ')' body ifrest;
 
 whilest: WHILE '(' cond ')' body;
 
-expr : NONE 
-    | RETURN expr
-    | '(' expr DEC ')'
-    | '(' expr INC ')'
-    | op expr
-    | '(' expr op expr ')'
+
+operand: NONE
+	| NAME
+	| NUMBER
+	| STRING
+	| NAME DEC
+	| NAME INC
+	| NAME '(' args ')'
+        | '(' operand op operand ')'
+	| '(' op opreand ')'
+	| '(' operand ')';
+
+expr :
+     RETURN expr
+    | op operand
+    | operand op operand
     | ifst
     | whilest
-    | NAME
-    | NUMBER
-    | STRING
-    | NAME '(' args ')'	;
+    | operand;
 
 exprs: exprs decl ';'
      | exprs expr ';'
