@@ -1,5 +1,5 @@
 def f(x){
-    y = x + 3;
+    var y = x + 3;
     return y; 
 };
 
@@ -16,8 +16,8 @@ def fibo(x){
 };
 
 def lis(){
-    x = [1,2,3];
-    y = [1,2,3];
+    var x = [1,2,3];
+    var y = [1,2,3];
     if( 1 in x){
         if(x is y){
             print("Object comparison not implemented");
@@ -29,6 +29,7 @@ def lis(){
 
 def infi(){
     if(True or False){
+        print(x <= 10);
         print("yay");
     } else if(False){
         print("dem");
@@ -36,10 +37,12 @@ def infi(){
 };
 
 def main(x){
-    x = 0;
+    var x = 0;
     while(x < 2){
 	print(f(x));
         x++;
+        x--;
+	print(-x);
     };
     print(fibo(5));
 };

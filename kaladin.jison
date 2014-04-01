@@ -17,6 +17,7 @@
 "true"                   return "TRUE";
 "false"                  return "FALSE";
 "return"                 return "RETURN";
+"var"                    return "VAR";
 "["                      return "[";
 "]"                      return "]";
 "("                      return "(";
@@ -24,9 +25,9 @@
 "{"                      return "{";
 "}"                      return "}";
 "None"                   return "NONE";
-"in"                     return "COMP";
-"is"                     return "COMP";
-"=="                     return "COMP";
+"in"                     return "IN";
+"is"                     return "IS";
+"=="                     return "==";
 "="                      return "=";
 "^"                      return '^';
 "*"                      return '*';
@@ -38,7 +39,10 @@
 ","                      return ",";
 \:                       return ":";
 \;                       return ";";
-[\<\>][\=]?              return "COMP";
+"<="                       return "<=";
+">="                       return "<=";
+"<"                       return "<=";
+">"                       return "<=";
 \"[^\"]*\"               return "STRING";
 [0-9]+("."[0-9]+)?\b     return "NUMBER";
 [A-Za-z]([A-Za-z0-9])*   return "NAME";
@@ -46,17 +50,16 @@
 <<EOF>>                  return 'EOF';
 
 /lex
-%start expressions
 
-
-// %% //grammar %%
 %token EOF
 %token DEC
 %token INC
 %token DEF
+%token VAR
 %token WHILE
-%token COMP
 %token IF
+%token IS 
+%token IN
 %token OR
 %token AND
 %token NOT
@@ -70,79 +73,105 @@
 %token ELSE
 %token ELSEIF
 
+%left INC DEC
 %right '='
 %left '+', '-'
 %left '*', '/'
 %left '^'
+%left UMINUS
+%left '<=' '>=' '<' '>' '==' IS IN
+%left NOT
+%left OR
+%left AND
+%right RETURN
+
+%start expressions
 
 %%
 
 expressions: program EOF;
 
 
-op: '*' | '+' | '-' | '^' | '/';
+//op: '*' | '+' | '-' | '^' | '/';
 
 program: program function ';'
        | function ';';
 
-function: DEF NAME '(' optargs ')' body;
+function: DEF NAME '(' optnames ')' body;
 
-optargs:
-       | optargs "," NAME
-       | NAME ;
+names: names ',' NAME
+     | NAME;
 
-args: 
-    | args ',' expr 
+optnames: | names;
+
+
+args: args ',' expr 
     | expr;
 
-body: '{' exprs '}';
+optargs: | args;
 
-decl: NAME "=" expr;
+body: '{' optdecls optexprs '}';
 
-conds: cond
-     | cond OR conds
-     | cond AND conds;
+decl: VAR NAME "=" expr;
 
-cond: expr
-    | expr COMP expr
-    | NOT cond;
+optdecls: | decls;
+
+decls: decls decl ';'
+     | decl ';';
+
 
 ifrest: 
       | ELSE body 
-      | ELSEIF  '(' conds ')' body ifrest;
+      | ELSEIF  '(' expr ')' body ifrest;
 
-ifst: IF '(' conds ')' body ifrest;
+ifst: IF '(' expr ')' body ifrest;
 
-whilest: WHILE '(' conds ')' body;
+whilest: WHILE '(' expr ')' body;
 
-operands: | operands ',' operand | operand;
 
-list: '[' operands ']';
-tuple: '(' operands ')';
+operands: operands ',' operand | operand;
+
+commasepexprs: commasepexprs ',' expr
+             | expr;
+
+optcommasepexprs: | commasepexprs;
+
+
+list: '[' optcommasepexprs ']';
          
-
-operand:  NONE
-	| NAME
-	| NUMBER
-	| STRING
-	| NAME DEC
-	| NAME INC
-        | list
-	| tuple
-	| NAME '(' args ')'
-        | '(' operand op operand ')'
-	| '(' op operand ')';
-
-expr: RETURN expr
-    | op operand
-    | operand op operand
+expr: expr '+' expr
+    | expr '-' expr
+    | expr '*' expr
+    | expr '/' expr
+    | expr '^' expr
+    | '-' expr %prec UMINUS
+    | expr '<=' expr
+    | expr '>=' expr
+    | expr '<' expr
+    | expr '>' expr
+    | expr '==' expr
+    | expr IS expr
+    | expr IN expr
+    | expr AND expr
+    | expr OR expr
+    | NOT expr
+    | expr INC
+    | expr DEC
+    | NAME 
+    | RETURN expr
+    | NAME '(' optargs ')'
+    | list
+    | NONE
+    | STRING
+    | NUMBER 
+    | '(' expr ')'
     | ifst
-    | whilest
-    | operand;
+    | whilest;
 
-exprs: exprs decl ';'
-     | exprs expr ';'
-     | expr ';'
-     | decl ';';
+
+exprs: exprs expr ';'
+     | expr ';';
+
+optexprs: | exprs;
 
 %%
