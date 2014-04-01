@@ -17,14 +17,16 @@
 "true"                   return "TRUE";
 "false"                  return "FALSE";
 "return"                 return "RETURN";
-//"["                      return "[";
-//"]"                      return "]";
+"["                      return "[";
+"]"                      return "]";
 "("                      return "(";
 ")"                      return ")";
 "{"                      return "{";
 "}"                      return "}";
 "None"                   return "NONE";
-"=="                      return "COMP";
+"in"                     return "COMP";
+"is"                     return "COMP";
+"=="                     return "COMP";
 "="                      return "=";
 "^"                      return '^';
 "*"                      return '*';
@@ -97,20 +99,27 @@ body: '{' exprs '}';
 
 decl: NAME "=" expr;
 
+conds: cond
+     | cond OR conds
+     | cond AND conds;
+
 cond: expr
-    | expr OR cond 
-    | expr AND cond 
-    | NOT cond 
-    | expr COMP expr;
+    | expr COMP expr
+    | NOT cond;
 
 ifrest: 
       | ELSE body 
-      | ELSEIF  '(' cond ')' body ifrest;
+      | ELSEIF  '(' conds ')' body ifrest;
 
-ifst: IF '(' cond ')' body ifrest;
+ifst: IF '(' conds ')' body ifrest;
 
-whilest: WHILE '(' cond ')' body;
+whilest: WHILE '(' conds ')' body;
 
+operands: | operands ',' operand | operand;
+
+list: '[' operands ']';
+tuple: '(' operands ')';
+         
 
 operand:  NONE
 	| NAME
@@ -118,10 +127,11 @@ operand:  NONE
 	| STRING
 	| NAME DEC
 	| NAME INC
+        | list
+	| tuple
 	| NAME '(' args ')'
         | '(' operand op operand ')'
-	| '(' op opreand ')'
-	| '(' operand ')';
+	| '(' op operand ')';
 
 expr: RETURN expr
     | op operand

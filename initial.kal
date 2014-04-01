@@ -15,6 +15,18 @@ def fibo(x){
     return ( fibo((x-1)) + fibo((x-2)));
 };
 
+def lis(){
+    x = [1,2,3];
+    y = [1,2,3];
+    if( 1 in x){
+        if(x is y){
+            print("Object comparison not implemented");
+        } else {
+            print("Not the same object");
+        };
+    };
+};
+
 def infi(){
     if(True or False){
         print("yay");
