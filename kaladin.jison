@@ -3,17 +3,17 @@
 %lex
 %%
 ^\#.*                    return false;
-\n                       return false;
-\t                       return false;
+//\n                       return false;
+//\t                       return false;
 \s                       return false;
 "def"                    return "DEF";
 "while"                  return "WHILE";
 "if"                     return "IF";
 "else if"                return "ELSEIF";
 "else"                   return "ELSE";
-"and"                    return "&";
-"or"                     return "|";
-"not"                    return "!";
+"and"                    return "AND";
+"or"                     return "OR";
+"not"                    return "NOT";
 "true"                   return "TRUE";
 "false"                  return "FALSE";
 "return"                 return "RETURN";
@@ -55,6 +55,9 @@
 %token WHILE
 %token COMP
 %token IF
+%token OR
+%token AND
+%token NOT
 %token NONE
 %token NAME
 %token NUMBER
@@ -92,7 +95,7 @@ body: '{' exprs '}';
 
 decl: NAME "=" expr;
 
-cond: expr | expr '|' cond | expr '&' cond | '!' cond | expr COMP expr;
+cond: expr | expr OR cond | expr AND cond | NOT cond | expr COMP expr;
 
 ifrest: | ELSE body | ELSEIF  '(' cond ')' body ifrest;
 
@@ -101,7 +104,7 @@ ifst: IF '(' cond ')' body ifrest;
 whilest: WHILE '(' cond ')' body;
 
 
-operand: NONE
+operand:  NONE
 	| NAME
 	| NUMBER
 	| STRING
@@ -112,8 +115,7 @@ operand: NONE
 	| '(' op opreand ')'
 	| '(' operand ')';
 
-expr :
-     RETURN expr
+expr: RETURN expr
     | op operand
     | operand op operand
     | ifst
@@ -124,8 +126,5 @@ exprs: exprs decl ';'
      | exprs expr ';'
      | expr ';'
      | decl ';';
-
-	
-
 
 %%
