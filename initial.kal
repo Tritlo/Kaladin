@@ -1,24 +1,35 @@
-f x = (x*x)
-g x = $ f (2 * x)
+def f(x){
+    y = (x + 3);
+    return y; 
+};
+
+#Pre : x is int >= 0
+#Use : f = fibo(x);
+#Post: f is the x-th fibonacci number
+def fibo(x){
+    if(x == 0){
+    	 return 0;
+    } else if(x == 1){
+      return 1;
+    };
+
+    return ( fibo((x-1)) + fibo((x-2)));
+};
+
+def infi(){
+    if(True or False){
+        print("yay");
+    } else if(False){
+        print("dem");
+    };
+};
 
 
-#All expressions have value.
-#While loops have the value in their else.
-runloop x = while (x < 2) then  (x = x + 1)  else  x
-
-
-main = {
-     x = $ runloop (1)
-     
-     y = if ((x > 2) and (y is nil)) then 5 else 7
-     
-     li = [5, 2, 3, 7, 5]
-     z = while (y in li) then ($ pop li) else li
-     
-     #Everything but false and nil is true
-     #if an else statement is missing, and
-     #the z i false, then the
-     #value of the expression is nil
-     if (z is true) then ( $ print "hello, world") else nil
-}
-
+def main(x){
+    x = 0;
+    while(x < 2){
+	print(f(x));
+        (x++);
+    };
+    print(fibo(5));
+};

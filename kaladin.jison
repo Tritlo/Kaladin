@@ -2,108 +2,125 @@
 %options flex case-insensitive
 %lex
 %%
-^\#.*                    return  false;
-\n                       return "l";
-\t                       return "t";
+^\#.*                    return false;
+\n                       return false;
+\t                       return false;
 \s                       return false;
-"while"                  return "W";
-"if"                     return "I";
-"then"                   return "T";
-"else"                   return "E";
+"def"                    return "DEF";
+"while"                  return "WHILE";
+"if"                     return "IF";
+"else if"                return "ELSEIF";
+"else"                   return "ELSE";
 "and"                    return "&";
 "or"                     return "|";
 "not"                    return "!";
-"is"                     return "=";
-"true"                   return "1";
-"false"                  return "0";
-"["                      return "[";
-"]"                      return "]";
-"_"                      return "_";
+"true"                   return "TRUE";
+"false"                  return "FALSE";
+"return"                 return "RETURN";
+//"["                      return "[";
+//"]"                      return "]";
 "("                      return "(";
 ")"                      return ")";
 "{"                      return "{";
 "}"                      return "}";
-"nil"                    return "N";
+"None"                   return "NONE";
+"=="                      return "COMP";
 "="                      return "=";
 "^"                      return '^';
 "*"                      return '*';
 "/"                      return '/';
+"++"                     return 'INC';
+"--"                     return 'DEC';
 "-"                      return '-';
 "+"                      return '+';
-"$"                      return "$";
 ","                      return ",";
 \:                       return ":";
 \;                       return ";";
-"in"                     return "c";
-[\<\>][\=]?              return "c";
-\"[^\"]*\"               return "s";
-[0-9]+("."[0-9]+)?\b     return "n";
-[A-Za-z]([A-Za-z0-9])*   return "i";
+[\<\>][\=]?              return "COMP";
+\"[^\"]*\"               return "STRING";
+[0-9]+("."[0-9]+)?\b     return "NUMBER";
+[A-Za-z]([A-Za-z0-9])*   return "NAME";
 
 <<EOF>>                  return 'EOF';
 
 /lex
 %left '+' '-'
 %left '*' '/'
-
+%left '^'
 %start expressions
 
 
-%% //grammar %%
+// %% //grammar %%
+%token EOF
+%token DEC
+%token INC
+%token DEF
+%token WHILE
+%token COMP
+%token IF
+%token NONE
+%token NAME
+%token NUMBER
+%token STRING
+%token TRUE
+%token FALSE
+%token RETURN
+%token ELSE
+%token ELSEIF
+
+%left '+', '-'
+%left '*', '/'
+%left '^'
+
+%%
+
 expressions: program EOF;
 
-name: "i";
-if: "I";
-then: "T";
-else: "E";
-while: "W";
-num: "n";
-str: "s";
-op: "*" | "+"| "-"| "^"| "/";
-nil: "N";
 
-program : function
-        | function program
-        | "l" program
-        | exprdelim;
+op: '*' | '+' | '-' | '^' | '/' | COMP;
 
-//Functions only take in one argument,
-//otherwise we get a whole bunch of conflicts
-function: name name "=" funcdecl
-        | name "=" funcexpr;
+program: program function ';'
+	| function ';';
 
-funcexpr: "{" body "}";
+function: DEF NAME '(' optargs ')' body;
 
-funcdecl: funcexpr | expr;
+optargs:
+    | optargs "," NAME
+    | NAME ;
 
-decl: name "=" expr;
+args: | args ',' expr | expr;
 
-exprdelim: ";" | "l";
+body: '{' exprs '}';
 
-body: expr exprdelim body | expr exprdelim | expr | "{" body "}" | "l" body;
+decl: NAME "=" expr;
 
-//do: funcexpr | expr;
+cond: expr | expr '|' cond | expr '&' cond | '!' cond | expr COMP expr;
 
-do: funcdecl;
-ifwhile: if | while;
-bool:  "&" | "|" | "!";
-cond:  expr | "(" cond bool cond ")" | bool "(" cond ")";
-flowexpr: ifwhile cond then do else do;
+ifrest: | ELSE body | ELSEIF  '(' cond ')' body ifrest;
 
-names: name | lit | name "," names | lit "," names;
-list: "[" "]" | "[" names "]";
-lit:  num | str | list | "1" | "0";
-funcappl:  "$" name  expr;
-//exprs: expr | expr "," exprs;
+ifst: IF '(' cond ')' body ifrest;
 
-expr: name
-| nil
-| funcappl
-| decl
-| lit
-| op expr
-| "(" expr ")"
-| "(" expr expr ")"
-| "(" expr "c" expr")"//Verdum ad hafa, annars faum vid conflict
-| flowexpr;
+whilest: WHILE '(' cond ')' body;
+
+expr : NONE 
+    | RETURN expr
+    | '(' expr DEC ')'
+    | '(' expr INC ')'
+    | op expr
+    | '(' expr op expr ')'
+    | ifst
+    | whilest
+    | NAME
+    | NUMBER
+    | STRING
+    | NAME '(' args ')'	;
+
+exprs: exprs decl ';'
+     | exprs expr ';'
+     | expr ';'
+     | decl ';';
+
+	
+
+
 %%
