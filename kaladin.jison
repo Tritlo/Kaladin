@@ -126,7 +126,8 @@ ifrest:
 
 ifst: IF '(' expr ')' body ifrest;
 
-whilest: WHILE '(' expr ')' body;
+whilest: WHILE '(' expr ')' body whilerest;
+whilerest: | ELSE body;
 
 
 operands: operands ',' operand | operand;
@@ -161,6 +162,7 @@ expr: expr '+' expr
     | RETURN expr
     | NAME '(' optargs ')'
     | list
+    | function
     | NONE
     | STRING
     | NUMBER 
