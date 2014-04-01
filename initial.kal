@@ -15,6 +15,11 @@ def fibo(x){
     return fibo(x-1) + fibo(x-2);
 };
 
+def exprsHaveValue(a){
+    var x = 0;
+    x = if( a < 4) { 3; } else { 5;};
+};
+
 def lis(){
     var x = [1,2,3];
     var y = [1,2,3];

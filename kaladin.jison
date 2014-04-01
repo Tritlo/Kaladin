@@ -92,8 +92,6 @@
 expressions: program EOF;
 
 
-//op: '*' | '+' | '-' | '^' | '/';
-
 program: program function ';'
        | function ';';
 
@@ -159,10 +157,10 @@ expr: expr '+' expr
     | expr INC
     | expr DEC
     | NAME 
+    | NAME '=' expr
     | RETURN expr
     | NAME '(' optargs ')'
     | list
-    | function
     | NONE
     | STRING
     | NUMBER 
