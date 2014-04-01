@@ -81,23 +81,31 @@ expressions: program EOF;
 op: '*' | '+' | '-' | '^' | '/';
 
 program: program function ';'
-	| function ';';
+       | function ';';
 
 function: DEF NAME '(' optargs ')' body;
 
 optargs:
-    | optargs "," NAME
-    | NAME ;
+       | optargs "," NAME
+       | NAME ;
 
-args: | args ',' expr | expr;
+args: 
+    | args ',' expr 
+    | expr;
 
 body: '{' exprs '}';
 
 decl: NAME "=" expr;
 
-cond: expr | expr OR cond | expr AND cond | NOT cond | expr COMP expr;
+cond: expr
+    | expr OR cond 
+    | expr AND cond 
+    | NOT cond 
+    | expr COMP expr;
 
-ifrest: | ELSE body | ELSEIF  '(' cond ')' body ifrest;
+ifrest: 
+      | ELSE body 
+      | ELSEIF  '(' cond ')' body ifrest;
 
 ifst: IF '(' cond ')' body ifrest;
 
