@@ -33,8 +33,7 @@
 "^"                      return '^';
 "*"                      return '*';
 "/"                      return '/';
-"++"                     return 'INC';
-"--"                     return 'DEC';
+"++"                     return '++';
 "-"                      return '-';
 "+"                      return '+';
 ","                      return ",";
@@ -45,6 +44,7 @@
 "<"                       return "<";
 ">"                       return ">";
 \"[^\"]*\"               return "STRING";
+\'[^\']*\"               return "STRING";
 [0-9]+("."[0-9]+)?\b     return "NUMBER";
 [A-Za-z]([A-Za-z0-9])*   return "NAME";
 
@@ -80,6 +80,7 @@
 %left AND
 %left '<=' '>=' '<' '>' '==' 
 %right '='
+%left '++'
 %left '+', '-'
 %left '*', '/'
 %left '^'
@@ -170,6 +171,7 @@ expr: expr '+' expr             { $$ = {OP: "+", "type": "OP","subexprs": [$1,$3
     | expr '<' expr             { $$ = {OP: "<",  "type": "OP","subexprs": [$1,$3]}}
     | expr '>' expr             { $$ = {OP: ">",  "type": "OP","subexprs": [$1,$3]}}
     | expr '==' expr            { $$ = {OP: "==", "type": "OP","subexprs": [$1,$3]}}
+    | expr "++" expr            { $$ = {OP: "++", "type": "OP","subexprs": [$1,$3]}}
     | NAME '(' optargs ')'      { $$ = {OP: $1, "type": "OP", "subexprs": $3}}
     | expr AND expr             { $$ = {type: "AND", "subexprs": [$1,$3]}}
     | expr OR expr              { $$ = {type: "OR", "subexprs": [$1,$3]}}
@@ -177,7 +179,7 @@ expr: expr '+' expr             { $$ = {OP: "+", "type": "OP","subexprs": [$1,$3
     | NAME '=' expr             { $$ = {type: "STORE", name: $1, val: $3 }}
     | NAME                      { $$ = {type: "NAME", "name": $1}}
     | RETURN expr               { $$ = {type: "RETURN", "val": $2}}
-    | NONE                      { $$ = {type: "LITERAL", "val": $1}}
+    | NONE                      { $$ = {type: "LITERAL", "val": "null"}}
     | STRING                    { $$ = {type: "LITERAL", "val": $1}}
     | NUMBER                    { $$ = {type: "LITERAL", "val": $1}}
     | TRUE                      { $$ = {type: "LITERAL", "val": $1}}
@@ -230,6 +232,8 @@ function generateBody(body,exprtype){
   };
 };
 
+var convTable = {};
+
 genExprType = {
   "OP": function (expr,exprtype){
 	    var op = expr["OP"]; 
@@ -247,6 +251,7 @@ genExprType = {
 	    emit('(Not' +exprtype+')');
 	},
   "LITERAL": function(expr,exprtype){
+           if(convTable[expr.val]) expr.val = convTable[expr.val];
            emit("(MakeVal"+exprtype+" " + expr.val +")");
 	},
   "NAME": function(expr,exprtype){
@@ -269,52 +274,57 @@ genExprType = {
          if(exprtype === "P") emit("(Push)");
          generateExpr(expr.subexprs[0],"");
          var labEnd = newLab();
-         emit("(GoFalse " + labEnd +")");
+         emit("(GoFalse _" + labEnd +")");
          generateExpr(expr.subexprs[1],"");
-         emit("(_" + labEnd +")");
+         emit("_" + labEnd +":");
          if(exprtype === "R") emit("(Return)");
       },
   "OR": function(expr,exprtype){
          if(exprtype === "P") emit("(Push)");
          generateExpr(expr.subexprs[0],"");
          var labEnd = newLab();
-         emit("(GoTrue " + labEnd +")");
+         emit("(GoTrue _" + labEnd +")");
          generateExpr(expr.subexprs[1],"");
-         emit("(_" + labEnd +")");
+         emit("_" + labEnd +":");
          if(exprtype === "P") emit("(Return)");
       },
   "IF": function(expr,exprtype){
          generateExpr(expr.cond,"");
          var labElse = newLab();
          var labEnd = newLab();
-         emit("(GoFalse " + labElse +")");
-         generateBody(expr.body,exprtype);
-         emit("(Go " + labEnd +")");
          var temp = expr.rest;
+         if(temp){
+	    emit("(GoFalse _" + labElse +")");
+	    generateBody(expr.body,exprtype);
+	    emit("(Go _" + labEnd +")");
+         } else {
+	    emit("(GoFalse _" + labEnd +")");
+	    generateBody(expr.body,exprtype);
+	 };
          while(temp){
-             emit("(_" + labElse +")");
-	     if(temp.cond){
+             emit("_" + labElse +":");
+	     if(temp.rest&& temp.rest.cond){
 		 labElse = newLab();
 		 generateExpr(temp.cond,"");
-		 emit("(GoFalse " + labElse +")");
+		 emit("(GoFalse _" + labElse +")");
 	     };
              generateBody(temp.body,exprtype);
-             emit("(Go " + labEnd +")");
+             emit("(Go _" + labEnd +")");
 	     temp = temp.rest;
 	 };
-         emit("(_" + labEnd +")");
+         emit("_" + labEnd +":");
 	},
 
   "WHILE": function(expr,exprtype){
          if(exprtype === "P") emit("(Push)");
          var labStart = newLab();
          var labEnd = newLab();
-         emit("(_" + labStart +")");
+         emit("_" + labStart +":");
          generateExpr(expr.cond,"");
-         emit("(GoFalse " + labEnd +")");
+         emit("(GoFalse _" + labEnd +")");
          generateBody(expr.body);//,exprtype);
-         emit("(Go " + labStart +")");
-         emit("(_" + labEnd +")");
+         emit("(Go _" + labStart +")");
+         emit("_" + labEnd +":");
          if(exprtype === "R") emit("(Return)");
       }
    };
@@ -325,6 +335,7 @@ var nameTable = {};
 function generateDecl(decl){
  if(nameTable[decl.name] === undefined)
      nameTable[decl.name] = newLoc();
+     emit("(Push)");
 
  var loc = nameTable[decl.name];
  generateExpr(decl.expr,"");
@@ -351,7 +362,7 @@ function generateFunction(funcname, funcobj){
   nameTable = {};
   namesInTable = 0;
   //emit("(MakeVal null)");
-  emit("(Push)");
+  //emit("(Push)");
   for(arg in args){
      var name =  args[arg];
      nameTable[name] = namesInTable++;

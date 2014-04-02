@@ -1,16 +1,14 @@
-def f(x,e,m){
-    var y = x + 3;
-    var z = x - 3;
-    return (y-z)/2; 
+def f(x){
+    var y = x;
+    var z = x -1;
+    return (y+z)/2.0; 
 };
 
 #Pre : x is int >= 0
 #Use : f = fibo(x);
 #Post: f is the x-th fibonacci number
 def fibo(x){
-    if(x == 0){
-        return 0;
-    } else if(x == 1){
+    if(x < 2){
         return 1;
     };
     return (fibo(x-1) + fibo(x-2));
@@ -19,26 +17,29 @@ def fibo(x){
 def exprsHaveValue(a){
     var x = 0;
     x = if( a < 4) { 3; } else { 5;};
+    return x;
 };
 
 
 def infi(x){
+    println("infi");
     if(true or false){
-        print(x <= 10);
-        print("yay");
-        print("yay");
-    } else if( false){
+        println(x <= 10);
+    } else if(false){
         print("dem");
     };
 };
 
-def main(x){
+def main(){
     var x = 0;
     infi(x);
     while(x < 2){
-	print(f(x));
-	print(-x);
+	println(f(x));
+	println(-x);
         x = x + 1;
     };
-    print(fibo(5));
+    println("fibo(30) = " ++ fibo(30));
+    println(exprsHaveValue(1));
+    println(exprsHaveValue(8));
+    println(f(4.5));
 };
