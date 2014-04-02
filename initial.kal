@@ -22,19 +22,19 @@ def exprsHaveValue(a){
 };
 
 
-def infi(){
-    if(True or False){
+def infi(x){
+    if(true or false){
         print(x <= 10);
         print("yay");
         print("yay");
-    } else if(False){
+    } else if( false){
         print("dem");
     };
 };
 
 def main(x){
     var x = 0;
-    infi();
+    infi(x);
     while(x < 2){
 	print(f(x));
 	print(-x);

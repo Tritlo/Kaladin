@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>The Kaladin Language</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<link href=" //cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="main.css" rel="stylesheet">
+<link href="lex.css" rel="stylesheet">
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<nav class="navbar navbar-default">
+  <div class="navbar-header">
+    <a class="navbar-brand" href="#">Kaladin</a>
+    </div>
+  <ul class="nav navbar-nav">
+    <li> <a href="index.html">Parser</a></li>
+    <li> <a href="kaladin.jison">Language jison</a></li>
+    <li> <a href="kaladin.js">Lexer/Parser Source</a></li>
+    <!--<li> <a href="change.html">Edit Parser</a></li>-->o
+    <li class="active"> <a href="lex.html">Lexer</a></li>
+    <li> <a href="https://github.com/Tritlo/Kaladin">GitHub</a></li>
+  </ul>
+  </nav>
+
+<script src="web.js"></script>
+<script src="kaladin.js"></script>
+</head>
+<body>
+<div class="container">
+	<textarea id="program" rows="30" cols="80" class="form-control"></textarea>
+	<div id="buttons">
+	    <input type="button" id="lex" value="Lex" class="btn btn-default btn-lg"></input>
+    </div>
+    <div class="panel panel-primary">
+	<div class="panel-heading">
+	  <h6 class="panel-title">Output</h6>
+	</div>
+	<div class="panel-body">
+	  <div class="container-fluid">
+	    <div id="out" class="row-fluid"></div>
+	  </div>
+	</div>
+	<div class="panel-footer">Copyright (C) 2014 Matthías Páll Gissurarson (<a href="https://raw.github.com/Tritlo/Kaladin/master/LICENSE">MIT License</a>)</div>
+    </div>
+</div>
+</body>
+</html>

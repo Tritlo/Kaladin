@@ -41,9 +41,9 @@
 \:                       return ":";
 \;                       return ";";
 "<="                       return "<=";
-">="                       return "<=";
-"<"                       return "<=";
-">"                       return "<=";
+">="                       return ">=";
+"<"                       return "<";
+">"                       return ">";
 \"[^\"]*\"               return "STRING";
 [0-9]+("."[0-9]+)?\b     return "NUMBER";
 [A-Za-z]([A-Za-z0-9])*   return "NAME";
@@ -164,7 +164,7 @@ expr: expr '+' expr             { $$ = {OP: "+", "type": "OP","subexprs": [$1,$3
     | expr '*' expr             { $$ = {OP: "*", "type": "OP","subexprs": [$1,$3]}}
     | expr '/' expr             { $$ = {OP: "/", "type": "OP","subexprs": [$1,$3]}}
     | expr '^' expr             { $$ = {OP: "^", "type": "OP","subexprs": [$1,$3]}}
-    | '-' expr %prec UMINUS     { $$ = {OP: "-", "type":"OP", "subexprs": [$1]}}
+    | '-' expr %prec UMINUS     { $$ = {OP: "-", "type":"OP", "subexprs": [$2]}}
     | expr '<=' expr            { $$ = {OP: "<=", "type": "OP","subexprs": [$1,$3]}}
     | expr '>=' expr            { $$ = {OP: ">=", "type": "OP","subexprs": [$1,$3]}}
     | expr '<' expr             { $$ = {OP: "<",  "type": "OP","subexprs": [$1,$3]}}
@@ -180,6 +180,8 @@ expr: expr '+' expr             { $$ = {OP: "+", "type": "OP","subexprs": [$1,$3
     | NONE                      { $$ = {type: "LITERAL", "val": $1}}
     | STRING                    { $$ = {type: "LITERAL", "val": $1}}
     | NUMBER                    { $$ = {type: "LITERAL", "val": $1}}
+    | TRUE                      { $$ = {type: "LITERAL", "val": $1}}
+    | FALSE                      { $$ = {type: "LITERAL", "val": $1}}
     | '(' expr ')'              { $$ = {type: "()", "val": $2}}
     | ifst 
     | whilest;
@@ -207,7 +209,7 @@ if(this.process !== undefined){
 var functions = {};
 
 var postparse = function(){
-  console.log("parsing complete");
+  //console.log("parsing complete");
   createProgram();
 }
 
@@ -263,6 +265,24 @@ genExprType = {
            var loc = nameTable[expr.name];
            emit("(Store"+exprtype+" " + loc +")");
 	},
+  "AND": function(expr,exprtype){
+         if(exprtype === "P") emit("(Push)");
+         generateExpr(expr.subexprs[0],"");
+         var labEnd = newLab();
+         emit("(GoFalse " + labEnd +")");
+         generateExpr(expr.subexprs[1],"");
+         emit("(_" + labEnd +")");
+         if(exprtype === "R") emit("(Return)");
+      },
+  "OR": function(expr,exprtype){
+         if(exprtype === "P") emit("(Push)");
+         generateExpr(expr.subexprs[0],"");
+         var labEnd = newLab();
+         emit("(GoTrue " + labEnd +")");
+         generateExpr(expr.subexprs[1],"");
+         emit("(_" + labEnd +")");
+         if(exprtype === "P") emit("(Return)");
+      },
   "IF": function(expr,exprtype){
          generateExpr(expr.cond,"");
          var labElse = newLab();
@@ -286,15 +306,16 @@ genExprType = {
 	},
 
   "WHILE": function(expr,exprtype){
+         if(exprtype === "P") emit("(Push)");
          var labStart = newLab();
          var labEnd = newLab();
          emit("(_" + labStart +")");
          generateExpr(expr.cond,"");
          emit("(GoFalse " + labEnd +")");
-         //Here we ignore exprtype, as it migth lead to strange bugs.
          generateBody(expr.body);//,exprtype);
          emit("(Go " + labStart +")");
          emit("(_" + labEnd +")");
+         if(exprtype === "R") emit("(Return)");
       }
    };
 
