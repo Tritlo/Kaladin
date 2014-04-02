@@ -1,5 +1,5 @@
 function lex (){
-    var t = $("#input").val();
+    var t = $("#program").val();
     kaladin.lexer.setInput(t);
     var next = 0;
     var match = "";
@@ -22,17 +22,32 @@ function lex (){
     
 }
 
-function parse(){
-    p = kaladin.parse($("#input").val());
-    if (p){
-	alert("Parsing successful!");
-    };
+var tooutput = [];
+var debug = console.log;
+emit = function(s){
+    tooutput.push(s);
 };
 
+function parse(){
+    tooutput = [];
+    $("#output").val("");
+    p = kaladin.parse($("#program").val());
+    $("#output").val(tooutput.join("\n"));
+    $("#download").click(function () {
+            window.open("data:application/javascript;charset=utf-8;base64,"+Base64.encode($("#output").val()));
+        }).removeAttr('disabled');
+    //if (p){
+	//alert("Parsing successful!");
+    //};
+};
+
+function errorfunc(e){
+    $("#output").val(e);
+};
 
 $(document).ready(function (){
-    $.get("initial.kal",success=function(data){$("#input").val(data);});
+    $.get("initial.kal",success=function(data){$("#program").val(data);});
     $("#lex").click(function(evt){lex();});
     $("#parse").click(function(evt){parse();});
-    window.onerror = alert;
+    window.onerror = errorfunc;
 });
