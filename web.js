@@ -34,7 +34,8 @@ function parse(){
     p = kaladin.parse($("#program").val());
     $("#output").val(tooutput.join("\n"));
     $("#download").click(function () {
-            window.open("data:application/javascript;charset=utf-8;base64,"+Base64.encode($("#output").val()));
+	    var blob = new Blob([$("#output").val()], {type: "text/plain;charset=utf-8"});
+	    saveAs(blob,"initial.masm");
         }).removeAttr('disabled');
     //if (p){
 	//alert("Parsing successful!");
