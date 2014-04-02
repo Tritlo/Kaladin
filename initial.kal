@@ -11,7 +11,7 @@ def fibo(x){
     if(x < 2){
         return 1;
     };
-    return (fibo(x-1) + fibo(x-2));
+    return fibo(x-1) + fibo(x-2);
 };
 
 def exprsHaveValue(a){
@@ -42,4 +42,5 @@ def main(){
     println(exprsHaveValue(1));
     println(exprsHaveValue(8));
     println(f(4.5));
+    println(x=if(3 < 2){2;});
 };
