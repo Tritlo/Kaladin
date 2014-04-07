@@ -22,6 +22,7 @@
 ", which takes no arguments"                    return "NOARGSDECL";
 ", is as follows:"                    return "FUNCDECLEND";
 "true"                   return "TRUE";
+"and return "                   return "ANDRET";
 "True"                   return "TRUE";
 "false"                  return "FALSE";
 "False"                  return "FALSE";
@@ -34,6 +35,8 @@
 "then"                   return "THEN"
 "The"                    return "THE";
 "the"                    return "THE";
+"Do"                    return "DO";
+"do"                    return "DO";
 "["                      return "[";
 "]"                      return "]";
 "("                      return "(";
@@ -45,10 +48,12 @@
 "=="                     return "==";
 "="                      return "=";
 "be"                      return "=";
+"be"                      return "=";
 "^"                      return '^';
 "*"                      return '*';
 "/"                      return '/';
 "++"                     return '++';
+"which is what we wanted to do."                      return 'EXPRDELIM';
 "-"                      return '-';
 "+"                      return '+';
 ", and"                      return ",";
@@ -62,8 +67,8 @@
 \'[^\']*\"               return "STRING";
 [A-Za-z]([A-Za-z0-9])*   return "NAME";
 [0-9]+("."[0-9]+)?\b     return "NUMBER";
-\:                       return ":";
-//\;                       return "EXPRDELIM";
+\:                       return "THEN";
+\;                       return "EXPRDELIM";
 \.                       return "EXPRDELIM";
 
 <<EOF>>                  return 'EOF';
@@ -99,6 +104,7 @@
 %token FUNCDECLEND
 %token THEN
 %token LET
+%token DO 
 
 
 %right RETURN
@@ -163,7 +169,7 @@ args: args ',' expr  {$1.push($3); $$ =$1;}
 optargs:  /* empty */{$$ = []}
        | args;
 
-body: exprs { $$ = {"exprs": $1}};
+body: exprlist { $$ = {"exprs": $1}};
 
 decl: VAR NAME "=" expr { $$ = {"name": $2, "expr" : $4}};
 
@@ -175,14 +181,14 @@ decls: decls decl EXPRDELIM {$1.push($2); $$ = $1;}
      | decl EXPRDELIM {$$ = [$1] };
 
 
+		    
+exprlist: exprlist ',' expr  {$1.push($3); $$ =$1;}
+        | expr {$$ = [$1]};
+
 ifrest://		  /* empty */ { $$ = null }
 ELSE body  { $$ = { "type": "ELSE", "body" : $2, "rest": null}};
-/*			
-| ELSEIF  expr THEN body ifrest
- { $$ = { "type": "ELSEIF", "cond": $2, "body" : $4, "rest": $5} };
-*/
 
-ifst: IF  expr THEN body ifrest EXPRDELIM 
+ifst: IF  expr THEN body ifrest EXPRDELIM
 %{ 
 $$ = {"type": "IF", "cond": $2, "body": $4, "rest": $5} 
 %};
@@ -207,10 +213,11 @@ expr: expr '+' expr             { $$ = {OP: "+", "type": "OP","subexprs": [$1,$3
     | expr '==' expr            { $$ = {OP: "==", "type": "OP","subexprs": [$1,$3]}}
     | expr "++" expr            { $$ = {OP: "++", "type": "OP","subexprs": [$1,$3]}}
     | NAME '(' optargs ')'      { $$ = {OP: $1, "type": "OP", "subexprs": $3}}
+    | DO NAME '(' optargs ')'   { $$ = {OP: $2, "type": "OP", "subexprs": $4}}
     | expr AND expr             { $$ = {type: "AND", "subexprs": [$1,$3]}}
     | expr OR expr              { $$ = {type: "OR", "subexprs": [$1,$3]}}
     | NOT expr                  { $$ = {type: "NOT", "val": $2}}
-    | LET NAME '=' expr             { $$ = {type: "STORE", name: $1, val: $3 }}
+    | LET NAME '=' expr             { $$ = {type: "STORE", name: $2, val: $4 }}
     | NAME '=' expr             { $$ = {type: "STORE", name: $1, val: $3 }}
     | NAME                      { $$ = {type: "NAME", "name": $1}}
     | RETURN expr               { $$ = {type: "RETURN", "val": $2}}
@@ -236,6 +243,7 @@ var name = "initial";
 
 if(this.process !== undefined){
   var emit = console.log;
+  //var emit = function(x){};
   var debug =  console.log; 
   name =  this.process.argv[2].split(".")[0];
 } else {
