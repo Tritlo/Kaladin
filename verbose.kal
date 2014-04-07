@@ -1,0 +1,47 @@
+The f function, whose argument is x, is as follows:
+    We let y be x.
+    We let z be x -1.
+    Return (y+z)/2.0.
+.
+
+#Pre : x is int >= 0
+#Use : f = fibo(x);
+#Post: f is the x-th fibonacci number
+The fibo function, whose argument is x, is as follows:
+    If x is less than 2 then 
+        Return 1. else 
+    Return fibo(x-1) + fibo(x-2)...
+.
+
+The exprsHaveValue function, whose argument is a, is as follows:
+    We let x be 0.
+    Let x be If  a is less than 4 then  3.  else  5...
+    Return x.
+.
+
+The multipleArgument function, whose arguments are a, b, and c, is as follows:
+    
+.
+
+The infi function, whose argument is x, is as follows:
+    println("infi").
+    If true or false then 
+        println(x is less than or equal to 10).
+     else 
+        print("dem")...
+.
+
+The main function, which takes no arguments, is as follows:
+    We let x be 0.
+    infi(x).
+    While x is less than 2 then 
+	println(f(x)).
+	println(-x).
+        x = x + 1...
+
+    println("fibo(30) = " ++ fibo(30)).
+    println(exprsHaveValue(1)).
+    println(exprsHaveValue(8)).
+    println(f(4.5)).
+    println(x=If 3 is less than 2 then 2. else null..).
+.

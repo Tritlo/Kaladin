@@ -7,18 +7,33 @@
 //\n                       return false;
 //\t                       return false;
 \s                       return false;
-"def"                    return "DEF";
+"function"                    return "DEF";
+"While"                  return "WHILE";
 "while"                  return "WHILE";
+"If"                     return "IF";
 "if"                     return "IF";
 "else if"                return "ELSEIF";
 "else"                   return "ELSE";
 "and"                    return "AND";
 "or"                     return "OR";
 "not"                    return "NOT";
+", whose arguments are"                    return "ARGSDECL";
+", whose argument is"                    return "ONEARGDECL";
+", which takes no arguments"                    return "NOARGSDECL";
+", is as follows:"                    return "FUNCDECLEND";
 "true"                   return "TRUE";
+"True"                   return "TRUE";
 "false"                  return "FALSE";
+"False"                  return "FALSE";
+"Return"                 return "RETURN";
 "return"                 return "RETURN";
-"var"                    return "VAR";
+"We let"                    return "VAR";
+"we let"                    return "VAR";
+"Let"                    return "LET";
+"let"                    return "LET";
+"then"                   return "THEN"
+"The"                    return "THE";
+"the"                    return "THE";
 "["                      return "[";
 "]"                      return "]";
 "("                      return "(";
@@ -27,26 +42,29 @@
 "}"                      return "}";
 "None"                   return "NONE";
 "in"                     return "IN";
-"is"                     return "IS";
 "=="                     return "==";
 "="                      return "=";
+"be"                      return "=";
 "^"                      return '^';
 "*"                      return '*';
 "/"                      return '/';
 "++"                     return '++';
 "-"                      return '-';
 "+"                      return '+';
+", and"                      return ",";
 ","                      return ",";
-\:                       return ":";
-\;                       return ";";
-"<="                       return "<=";
-">="                       return ">=";
-"<"                       return "<";
-">"                       return ">";
+"is less than or equal to"                       return "<=";
+"is greater than or equal to"                       return ">=";
+"is less than"                       return "<";
+"is greater than"                       return ">";
+"is"                     return "IS";
 \"[^\"]*\"               return "STRING";
 \'[^\']*\"               return "STRING";
-[0-9]+("."[0-9]+)?\b     return "NUMBER";
 [A-Za-z]([A-Za-z0-9])*   return "NAME";
+[0-9]+("."[0-9]+)?\b     return "NUMBER";
+\:                       return ":";
+//\;                       return "EXPRDELIM";
+\.                       return "EXPRDELIM";
 
 <<EOF>>                  return 'EOF';
 
@@ -73,6 +91,15 @@
 %token RETURN
 %token ELSE
 %token ELSEIF
+%token EXPRDELIM
+%token THE
+%token ARGSDECL
+%token NOARGSDECL
+%token ONEARGDECL
+%token FUNCDECLEND
+%token THEN
+%token LET
+
 
 %right RETURN
 %left NOT
@@ -99,16 +126,20 @@ kaladin: program EOF { postparse();};
 //jison does not have mid-rule actions.
 program: functions;
 
-functions: functions function ';'
-	 | function ";";
+functions: functions function EXPRDELIM
+	 | function EXPRDELIM;
 
 
-function: DEF NAME '(' optnames ')' '{' optdecls optexprs '}'
+posArgDecl: NOARGSDECL {{ $$ = []; }}
+          | ARGSDECL names {{ $$ = $2;}}
+          | ONEARGDECL NAME {{ $$ = [$2];}};
+
+function: THE NAME DEF posArgDecl FUNCDECLEND  optdecls optexprs
 %{
  var funname = $2;
  var funargs = $4;
- var decls = $7;
- var exprs = $8;
+ var decls = $6;
+ var exprs = $7;
  fun = {
     args: funargs,
     decls: decls,
@@ -117,6 +148,7 @@ function: DEF NAME '(' optnames ')' '{' optdecls optexprs '}'
  functions[funname] = fun
 
 %};
+
 
 names: names ',' NAME {$1.push($3); $$ = $1;} 
      | NAME {$$ = [$1]};
@@ -131,7 +163,7 @@ args: args ',' expr  {$1.push($3); $$ =$1;}
 optargs:  /* empty */{$$ = []}
        | args;
 
-body: '{' optexprs '}' { $$ = {"exprs": $2}};
+body: exprs { $$ = {"exprs": $1}};
 
 decl: VAR NAME "=" expr { $$ = {"name": $2, "expr" : $4}};
 
@@ -139,23 +171,25 @@ decl: VAR NAME "=" expr { $$ = {"name": $2, "expr" : $4}};
 optdecls:  /* empty */ { $$ = [] }
         | decls;
 
-decls: decls decl ';' {$1.push($2); $$ = $1;}
-     | decl ';' {$$ = [$1] };
+decls: decls decl EXPRDELIM {$1.push($2); $$ = $1;}
+     | decl EXPRDELIM {$$ = [$1] };
 
 
-ifrest:  /* empty */ { $$ = null }
-| ELSE body  { $$ = { "type": "ELSE", "body" : $2, "rest": null}}
-| ELSEIF  '(' expr ')' body ifrest
- { $$ = { "type": "ELSEIF", "cond": $3, "body" : $5, "rest": $6} };
+ifrest://		  /* empty */ { $$ = null }
+ELSE body  { $$ = { "type": "ELSE", "body" : $2, "rest": null}};
+/*			
+| ELSEIF  expr THEN body ifrest
+ { $$ = { "type": "ELSEIF", "cond": $2, "body" : $4, "rest": $5} };
+*/
 
-ifst: IF '(' expr ')' body ifrest  
+ifst: IF  expr THEN body ifrest EXPRDELIM 
 %{ 
-$$ = {"type": "IF", "cond": $3, "body": $5, "rest": $6} 
+$$ = {"type": "IF", "cond": $2, "body": $4, "rest": $5} 
 %};
 
-whilest: WHILE '(' expr ')' body
+whilest: WHILE  expr THEN body EXPRDELIM
 %{ 
-$$ = {"type": "WHILE", "cond": $3, "body": $5};
+$$ = {"type": "WHILE", "cond": $2, "body": $4};
 %};
 
 
@@ -176,6 +210,7 @@ expr: expr '+' expr             { $$ = {OP: "+", "type": "OP","subexprs": [$1,$3
     | expr AND expr             { $$ = {type: "AND", "subexprs": [$1,$3]}}
     | expr OR expr              { $$ = {type: "OR", "subexprs": [$1,$3]}}
     | NOT expr                  { $$ = {type: "NOT", "val": $2}}
+    | LET NAME '=' expr             { $$ = {type: "STORE", name: $1, val: $3 }}
     | NAME '=' expr             { $$ = {type: "STORE", name: $1, val: $3 }}
     | NAME                      { $$ = {type: "NAME", "name": $1}}
     | RETURN expr               { $$ = {type: "RETURN", "val": $2}}
@@ -189,8 +224,8 @@ expr: expr '+' expr             { $$ = {OP: "+", "type": "OP","subexprs": [$1,$3
     | whilest;
 
 
-exprs: exprs expr ';' {$1.push($2); $$ = $1;}
-     | expr ';' { $$ = [$1] };
+exprs: exprs expr EXPRDELIM {$1.push($2); $$ = $1;}
+     | expr EXPRDELIM { $$ = [$1] };
 
 optexprs:  /* empty */ { $$ = [] }
      | exprs;
