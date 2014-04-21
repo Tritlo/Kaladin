@@ -13,6 +13,7 @@
 \usepackage[pdftex]{hyperref}
 %\usepackage{makeidx,smplindx,fancyhdr,graphicx,times,multicol,comment}
 %\input{/home/tritlo/Dropbox/Latex/header.tex}
+\usepackage{listingsutf8}
 \usepackage{times}
 \usepackage[T1]{fontenc}
 \usepackage[rounded]{syntax}
@@ -43,6 +44,8 @@
 \begin{abstract}
 Kaladin er mál sem reynir að vera eins skýrt og það getur verið, en er
 heldur einfalt hvað forritunarmál varða. Kaladin keyrir á Morpho sýndarvélinni.
+Kaldin er ``eager'', ``procedural'' mál, en það er bálkmótað hvað föll varðar.
+Kaladin styður ekki ``global'' breytur.
 \end{abstract}
 
 \tableofcontents
@@ -67,11 +70,40 @@ tölvunni þar sem þýða á skrárnar, en \verb|Node.js| gerir manni
 kleyft að keyra JavaScript án vafra. Upplýsingar um \verb|Node.js| og uppsetningu
 þess má finna á \url{http://nodejs.org/}.
 
+Kaladin er að mörgu leyti líkt Morpho, og getur kallað á öll föll sem Morpho
+býður uppá, án þess að krefjast sérstakrar tiltekningar á því.
+
+Einfalt dæmi um fall er:
+\begin{lstlisting}[frame=single,breaklines=true,numbers=left,language=Python]
+#Pre : x is int >= 0
+#Use : f = fibo(x);
+#Post: f is the x-th fibonacci number
+The fibo function, whose argument is x, is as follows:
+    if x is 0 then
+        return 0
+    else if x is 1 then
+             return 1
+         else
+           return fibo(x-1) + fibo(x-2)...
+which is what we wanted to do.
+\end{lstlisting}
+
+en þetta fall má einnig skrifa á hátt sem nýtir sér að segðir hafa
+gildi, þ.e.
+
+\begin{lstlisting}[frame=single,breaklines=true,numbers=left,language=Python]
+#Pre : x is int >= 0
+#Use : f = fib(x);
+#Post: f is the x-th fibonacci number
+The fib function, whose argument is x, is as follows:
+    return if x is less than 2 then x else return fib(x-1) + fib(x-2)..
+which is what we wanted to do.
+\end{lstlisting}
+
 \section{Notkun og uppsetning}
 Til þess að þýða Kaladin skrá er notuð eftirfarandi skipun úr möppunni
 þar sem \verb|kaladin.js| er í (hér er ``initial'' notað sem nafnið á skránni
-sem þýða á, en skipta má því yfir í hvað sem er (svo lengi sem það inniheldur
-aðeins [0-9a-zA-Z])):
+sem þýða á). 
 \begin{verbatim}
 node kaladin.js initial.kal
 \end{verbatim}
@@ -91,48 +123,49 @@ java -jar morpho.jar initial
 \subsection{Frumeiningar málsins}
 \subsubsection{Athugasemdir}
 \subsubsection{Lykilorð}
-Lykilorð í Kaladin eru frekar mörg, en sum lykilorðin eru bil.
-``\verb|function|'',               
-``\verb|While|'',                  
-``\verb|while|'',                  
-``\verb|If|'',                     
-``\verb|if|'',                     
-``\verb|else|'',                   
-``\verb|and|'',                    
-``\verb|or|'',                     
-``\verb|not|'',                    
-``\verb|, whose arguments are|'',                    
-``\verb|, whose argument is|'',                    
-``\verb|, which takes no arguments|'',                    
-``\verb|, is as follows:|'',                    
-``\verb|true|'',                   
-``\verb|and return |'',                   
-``\verb|True|'',                   
-``\verb|false|'',                  
-``\verb|False|'',                  
-``\verb|Return|'',                 
-``\verb|return|'',                 
-``\verb|We let|'',                    
-``\verb|we let|'',                    
-``\verb|Let|'',                    
-``\verb|let|'',                    
-``\verb|then|'',                   
-``\verb|The|'',                    
-``\verb|the|'',                    
-``\verb|Do|'',                    
-``\verb|do|'',                    
-``\verb|None|'',                   
-``\verb|in|'',                     
-``\verb|be|'',                      
-``\verb|which is what we wanted to do.|'',                      
-``\verb|is less than or equal to|'',                       
-``\verb|is greater than or equal to|'',                       
-``\verb|is less than|'',                       
-``\verb|is greater than|'',                       
-``\verb|is|'',                     
-``\verb|, and|'',
+Lykilorð í Kaladin eru frekar mörg, en sum lykilorðin eru tvö eða fleiri orð
+hlið við hlið. Lykilorðin eru eftirfarandi:
+``\verb|function|'',
+``\verb|While|'',
+``\verb|while|'', 
+``\verb|If|'', 
+``\verb|if|'',
+``\verb|else|'',
+``\verb|and|'',
+``\verb|or|'',
+``\verb|not|'',
+``\verb|, whose arguments are|'',
+``\verb|, whose argument is|'',
+``\verb|, which takes no arguments|'',
+``\verb|, is as follows:|'',
+``\verb|true|'',
+``\verb|and return |'',
+``\verb|True|'',
+``\verb|false|'',
+``\verb|False|'',
+``\verb|Return|'',
+``\verb|return|'',
+``\verb|We let|''
+``\verb|we let|'',
+``\verb|Let|'',
+``\verb|let|'',
+``\verb|then|'',
+``\verb|The|'',
+``\verb|the|'',
+``\verb|Do|'',
+``\verb|do|'',
+``\verb|None|'',
+``\verb|in|'',
+``\verb|be|'',
+``\verb|which is what we wanted to do.|'',
+``\verb|is less than or equal to|'',
+``\verb|is greater than or equal to|'',
+``\verb|is less than|'',
+``\verb|is greater than|'',
+``\verb|is|'',
+``\verb|, and|''.
 
-en einnig eru táknin ``\verb|.|'',
+Einnig eru táknin ``\verb|.|'',
 ``\verb|,| '',
 ``\verb|;| '',
 ``\verb|:| '',
@@ -247,10 +280,9 @@ frátekin.
 \subsubsection{Einundaraðgerðir}
 \subsubsection{if-segð}
 \subsubsection{while-segð}
-\section{Mállýsing}
 
 
-\subsection{Ýmis málrit með hjálp syntax pakkans í LaTeX}
+\section{Ýmis málrit með hjálp syntax pakkans í LaTeX}
 
 Hér eru nokkur málrit skilgreind með hjálp {\tt syntax} pakkans.
 Breytið þessu eftir þörfum, eða notið aðrar

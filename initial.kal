@@ -6,10 +6,10 @@ which is what we wanted to do.
 
 #Pre : x is int >= 0
 #Use : f = fibo(x);
-#Post: f is the x+1-th fibonacci number
+#Post: f is the x-th fibonacci number
 The fibo function, whose argument is x, is as follows:
     if x is 0 then
-        return 1
+        return 0
     else if x is 1 then
              return 1
          else
@@ -17,10 +17,10 @@ The fibo function, whose argument is x, is as follows:
 which is what we wanted to do.
 
 #Pre : x is int >= 0
-#Use : f = fibo2(x);
+#Use : f = fib(x);
 #Post: f is the x-th fibonacci number
-The fibo2 function, whose argument is x, is as follows:
-    return if x is less than 2 then x else return fibo2(x-1) + fibo2(x-2)..
+The fib function, whose argument is x, is as follows:
+    return if x is less than 2 then x else fib(x-1) + fib(x-2)..
 which is what we wanted to do.
 
 The exprsHaveValue function, whose argument is a, is as follows:
