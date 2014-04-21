@@ -7,12 +7,11 @@
 //\n                       return false;
 //\t                       return false;
 \s                       return false;
-"function"                    return "DEF";
+"function"               return "DEF";
 "While"                  return "WHILE";
 "while"                  return "WHILE";
 "If"                     return "IF";
 "if"                     return "IF";
-"else if"                return "ELSEIF";
 "else"                   return "ELSE";
 "and"                    return "AND";
 "or"                     return "OR";
@@ -37,32 +36,27 @@
 "the"                    return "THE";
 "Do"                    return "DO";
 "do"                    return "DO";
-"["                      return "[";
-"]"                      return "]";
-"("                      return "(";
-")"                      return ")";
-"{"                      return "{";
-"}"                      return "}";
 "None"                   return "NONE";
 "in"                     return "IN";
-"=="                     return "==";
-"="                      return "=";
 "be"                      return "=";
-"be"                      return "=";
-"^"                      return '^';
-"*"                      return '*';
-"/"                      return '/';
-"++"                     return '++';
 "which is what we wanted to do."                      return 'EXPRDELIM';
-"-"                      return '-';
-"+"                      return '+';
-", and"                      return ",";
-","                      return ",";
 "is less than or equal to"                       return "<=";
 "is greater than or equal to"                       return ">=";
 "is less than"                       return "<";
 "is greater than"                       return ">";
-"is"                     return "IS";
+"is"                     return "==";
+", and"                      return ",";
+"("                     return "(";
+")"                     return ")";
+"=="                     return "==";
+"="                      return "=";
+"^"                      return '^';
+"*"                      return '*';
+"/"                      return '/';
+"++"                     return '++';
+"-"                      return '-';
+"+"                      return '+';
+","                      return ",";
 \"[^\"]*\"               return "STRING";
 \'[^\']*\"               return "STRING";
 [A-Za-z]([A-Za-z0-9])*   return "NAME";
@@ -217,7 +211,7 @@ expr: expr '+' expr             { $$ = {OP: "+", "type": "OP","subexprs": [$1,$3
     | expr AND expr             { $$ = {type: "AND", "subexprs": [$1,$3]}}
     | expr OR expr              { $$ = {type: "OR", "subexprs": [$1,$3]}}
     | NOT expr                  { $$ = {type: "NOT", "val": $2}}
-    | LET NAME '=' expr             { $$ = {type: "STORE", name: $2, val: $4 }}
+    | LET NAME '=' expr         { $$ = {type: "STORE", name: $2, val: $4 }}
     | NAME '=' expr             { $$ = {type: "STORE", name: $1, val: $3 }}
     | NAME                      { $$ = {type: "NAME", "name": $1}}
     | RETURN expr               { $$ = {type: "RETURN", "val": $2}}

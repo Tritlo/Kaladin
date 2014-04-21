@@ -6,12 +6,21 @@ which is what we wanted to do.
 
 #Pre : x is int >= 0
 #Use : f = fibo(x);
-#Post: f is the x-th fibonacci number
+#Post: f is the x+1-th fibonacci number
 The fibo function, whose argument is x, is as follows:
-    if x is less than 2 then
+    if x is 0 then
         return 1
-    else 
-        return fibo(x-1) + fibo(x-2)..
+    else if x is 1 then
+             return 1
+         else
+           return fibo(x-1) + fibo(x-2)...
+which is what we wanted to do.
+
+#Pre : x is int >= 0
+#Use : f = fibo2(x);
+#Post: f is the x-th fibonacci number
+The fibo2 function, whose argument is x, is as follows:
+    return if x is less than 2 then x else return fibo2(x-1) + fibo2(x-2)..
 which is what we wanted to do.
 
 The exprsHaveValue function, whose argument is a, is as follows:
@@ -39,6 +48,7 @@ The main function, which takes no arguments, is as follows:
 	do println(f(x)), println(-x), and x = x + 1..
 
     println("fibo(30) = " ++ fibo(30)).
+    println("fibo2(30) is " ++ fibo2(30)).
     println(exprsHaveValue(1)).
     println(exprsHaveValue(8)).
     println(f(4.5)).
