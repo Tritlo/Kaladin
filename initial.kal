@@ -1,46 +1,46 @@
-def f(x){
-    var y = x;
-    var z = x -1;
-    return (y+z)/2.0; 
-};
+The f function, whose argument is x, is as follows:
+    We let y be x.
+    We let z be x -1.
+    Return (y+z)/2.0.
+which is what we wanted to do.
 
 #Pre : x is int >= 0
 #Use : f = fibo(x);
 #Post: f is the x-th fibonacci number
-def fibo(x){
-    if(x < 2){
-        return 1;
-    };
-    return fibo(x-1) + fibo(x-2);
-};
+The fibo function, whose argument is x, is as follows:
+    if x is less than 2 then
+        return 1
+    else 
+        return fibo(x-1) + fibo(x-2)..
+which is what we wanted to do.
 
-def exprsHaveValue(a){
-    var x = 0;
-    x = if( a < 4) { 3; } else { 5;};
-    return x;
-};
+The exprsHaveValue function, whose argument is a, is as follows:
+    We let x be 0.
+    Let x be if a is less than 4 then 3 else 5..
+    Return x.
+which is what we wanted to do.
 
+The multipleArgument function, whose arguments are a, b, and c, is as follows:
+    Return a + b + c.
+which is what we wanted to do.
 
-def infi(x){
-    println("infi");
-    if(true or false){
-        println(x <= 10);
-    } else if(false){
-        print("dem");
-    };
-};
+The infi function, whose argument is x, is as follows:
+    println("infi").
+    if true or false then 
+        println(x is less than or equal to 10)
+     else
+        print("dem")..
+which is what we wanted to do.
 
-def main(){
-    var x = 0;
-    infi(x);
-    while(x < 2){
-	println(f(x));
-	println(-x);
-        x = x + 1;
-    };
-    println("fibo(30) = " ++ fibo(30));
-    println(exprsHaveValue(1));
-    println(exprsHaveValue(8));
-    println(f(4.5));
-    println(x=if(3 < 2){2;});
-};
+The main function, which takes no arguments, is as follows:
+    We let x = 0.
+    do infi(x).
+    while x is less than 2 then 
+	do println(f(x)), println(-x), and x = x + 1..
+
+    println("fibo(30) = " ++ fibo(30)).
+    println(exprsHaveValue(1)).
+    println(exprsHaveValue(8)).
+    println(f(4.5)).
+    println(x=If 3 is less than 2 then 2 else None.).
+which is what we wanted to do.
