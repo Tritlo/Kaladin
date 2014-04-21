@@ -1,0 +1,409 @@
+%%
+%%  Beinagrind fyrir Morpho handbók í LaTeX.
+%%  Til að keyra þetta gegnum LaTeX forritið
+%%  má t.d. nota pdflatex í cygwin með eftir-
+%%  farandi skipun í bash:
+%%
+%%       pdflatex handbok
+%%   eða (virkar líka í cmd):
+%%       bash -c 'pdflatex handbok'
+%%
+\documentclass[12pt,a4paper]{article}
+\usepackage[icelandic]{babel}
+\usepackage[pdftex]{hyperref}
+%\usepackage{makeidx,smplindx,fancyhdr,graphicx,times,multicol,comment}
+%\input{/home/tritlo/Dropbox/Latex/header.tex}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage[rounded]{syntax}
+\newenvironment{repnull}[0]{%
+	\begin{stack}
+	\\
+	\begin{rep}
+}{%
+	\end{rep}
+	\end{stack}
+}
+\newenvironment{málrit}[1]{%
+	\par\noindent\begin{minipage}{\linewidth}\vspace{0.5em}\begin{quote}\noindent%
+	\hspace*{-2em}\synt{#1}:\hfill\par%
+	\noindent%
+	\begin{minipage}{\linewidth}\begin{syntdiag}%
+}{%
+	\end{syntdiag}\end{minipage}\end{quote}\end{minipage}%
+}
+
+\setlength{\parskip}{8pt plus 1pt minus 1pt}
+\begin{document}
+\sloppy
+\title{Handbók fyrir Kaladin}
+\author{Matthías Páll Gissurarson}
+\maketitle
+
+\begin{abstract}
+Kaladin er einfalt mál sem keyrir á Morpho sýndarvélinni. Í Kaladin hafa 
+allar segðir gildi.
+\end{abstract}
+
+\tableofcontents
+
+\section{Inngangur}
+Kaldin er einfalt mál sem þýðist yfir í Morphp smalamál, og keyrir á Morpho 
+sýndarvélinni.
+
+Kaladin má nota frá netinu í gegnum síðuna \url{kaladin.mpg.is},
+en til þess að geta keyrt skrár sem málið skilar og þýða án nettengingar,
+þá þarf að sækja málið frá github. Málið og handbók þessa má finna á
+\url{https://github.com/Tritlo/Kaladin}.
+
+Kaladin þýðist yfir í Morpho smalamál. Til þess að geta notað Kaladin, þá
+þarf Morpho að vera uppsett á tölvunni eða \verb|morpho.jar| skráin að vera til
+staðar. Morpho má sækja á \url{http://morpho.cs.hi.is/}, en höfundur
+Morpho er Snorri Agnarsson.
+
+Kaladin þýðandinn er skrifaður í JavaScript, en til þess að þýða Kaladin skrár
+(oftast með \verb|.kal| endingu), þá þarf \verb|Node.js| að vera uppsett á
+tölvunni þar sem þýða á skrárnar, en \verb|Node.js| gerir manni
+kleyft að keyra JavaScript án vafra. Upplýsingar um \verb|Node.js| og uppsetningu
+þess má finna á \url{http://nodejs.org/}.
+
+\section{Notkun og uppsetning}
+Til þess að þýða Kaladin skrá er notuð eftirfarandi skipun úr möppunni
+þar sem \verb|kaladin.js| er í (hér er ``initial'' notað sem nafnið á skránni
+sem þýða á, en skipta má því yfir í hvað sem er (svo lengi sem það inniheldur
+aðeins [0-9a-zA-Z])):
+\begin{verbatim}
+node kaladin.js initial.kal
+\end{verbatim}
+en skipunin býr til skjal sem ber heitið ``initial.masm'' í sömu möppu og
+skipunin var keyrð úr, sem inniheldur smalamál fyrir Morpho sýndarvélina.
+
+Skránna má svo þýða með Morpho með skipuninni
+\begin{verbatim}
+java -jar morpho.jar -c initial.masm
+\end{verbatim}
+og svo keyra með
+\begin{verbatim}
+java -jar morpho.jar initial
+\end{verbatim}
+
+\section{Málfræði}
+\subsection{Frumeiningar málsins}
+\subsubsection{Athugasemdir}
+\subsubsection{Lykilorð}
+\subsection{Mállýsing}
+\section{Merking málsins}
+\subsection{Gildi}
+\subsection{Breytur}
+\subsection{Merking segða}
+\subsubsection{Heiltölusegð}
+\subsubsection{Fleytitölusegð}
+\subsubsection{Stafsegð}
+\subsubsection{Strengsegð}
+\subsubsection{Listasegð}
+\subsubsection{return-segð}
+\subsubsection{Röksegðir}
+\subsubsection{Kallsegð}
+\subsubsection{Tvíundaraðgerðir}
+\subsubsection{Einundaraðgerðir}
+\subsubsection{if-segð}
+\subsubsection{while-segð}
+\section{Mállýsing}
+
+\begin{grammar}
+<program> ::= <functions>
+
+<functions> ::= <functions> <function> ';'
+	 \alt <function> ';'
+
+<function> ::= DEF NAME '(' <optnames> ')' '\{' <optdecls> <optexprs> '\}'
+
+<names> ::= <names> ',' NAME 
+      \alt NAME
+
+<optnames> ::= $\lambda$
+        \alt <names>
+
+
+<args> ::= <args> ',' <expr>
+    \alt <expr>
+
+
+<optargs> ::= $\lambda$
+       \alt <args>;
+
+<body> ::= '\{' <optexprs> '\}'
+
+<decl> ::= VAR NAME "=" <expr> 
+
+
+<optdecls> ::= $\lambda$
+        \alt <decls>
+
+<decls> ::= <decls> <decl> ';'
+     \alt <decl> ';'
+
+
+<ifrest> ::= $\lambda$
+\alt ELSE <body>
+\alt ELSEIF  '(' <expr> ')' <body> <ifrest>
+
+<ifst> ::= IF '(' <expr> ')' <body> <ifrest>
+
+<whilest> ::= WHILE '(' <expr> ')' <body>
+
+
+<expr> ::= <expr> '+' <expr>             
+    \alt <expr> '-' <expr>             
+    \alt <expr> '*' <expr>             
+    \alt <expr> '/' <expr>             
+    \alt <expr> '\^' <expr>             
+    \alt '-' <expr>                  
+    \alt <expr> '<=' <expr>            
+    \alt <expr> '>=' <expr>            
+    \alt <expr> '<' <expr>             
+    \alt <expr> '>' <expr>             
+    \alt <expr> '==' <expr>            
+    \alt <expr> "++" <expr>            
+    \alt NAME '(' optargs ')'      
+    \alt <expr> AND <expr>             
+    \alt <expr> OR <expr>              
+    \alt NOT <expr>                  
+    \alt NAME '=' <expr>             
+    \alt NAME                      
+    \alt RETURN <expr>               
+    \alt NONE                      
+    \alt STRING                    
+    \alt NUMBER                    
+    \alt TRUE                      
+    \alt FALSE                     
+    \alt '(' <expr> ')'              
+    \alt ifst 
+    \alt whilest
+
+
+<exprs> ::= <exprs> <expr> ';'
+     \alt <expr> ';'
+
+<optexprs> ::= $\lambda$
+     \alt <exprs>
+\end{grammar}
+
+\subsection{Ýmis málrit með hjálp syntax pakkans í LaTeX}
+
+Hér eru nokkur málrit skilgreind með hjálp {\tt syntax} pakkans.
+Breytið þessu eftir þörfum, eða notið aðrar
+aðferðir ef það hentar ykkur betur.
+
+Finna má upplýsingar um {\tt syntax} pakkann
+\htmladdnormallinkfoot{á vefnum}{http://www.tug.org/texlive/Contents/live/texmf-dist/doc/latex/mdwtools/syntax.pdf}.
+
+Takið eftir að ráðlegt er að gera einhverjar breytingar hér,
+þó ekki væri til annars en að gera textalýsingar á merkingu
+einfaldari með tilliti til forgangs ýmissa málfyrirbæra.
+
+\begin{málrit}{id_list}
+	\begin{stack}
+	
+	\\
+		\begin{rep} <id> \\ `,' \end{rep}
+	\end{stack}
+\end{málrit}%
+
+\subsubsection{Forrit}
+
+\begin{málrit}{program}
+	\begin{rep}
+		<function>
+	\end{rep}
+\end{málrit}
+
+\subsubsection{Föll}
+
+\begin{málrit}{function}
+	<id> `(' <id_list> `)' <body>
+\end{málrit}
+
+\subsubsection{Stofnar}
+\begin{málrit}{body}
+	`{' 
+	<decls>
+	\begin{repnull} <expr> `;' \end{repnull}
+	`}' 
+\end{málrit}
+
+\subsubsection{Skilgreiningar}
+\begin{málrit}{decls}
+	\begin{repnull}
+		\begin{stack}
+			`var' \begin{rep} <id> \\ `,' \end{rep} `;'
+		\\
+			`val' \begin{rep} <id> `=' <expr> \\ `,' \end{rep} `;'
+		\end{stack}
+	\end{repnull}
+\end{málrit}
+
+\subsubsection{Segðir}
+
+\begin{málrit}{expr}
+	\begin{rep}
+		<small_expr>
+	\\
+		\begin{stack}
+			<op>
+		\\
+			`&&'
+		\\
+			`||'
+		\end{stack}
+	\end{rep}
+\end{málrit}
+
+\begin{málrit}{small_expr}
+	\begin{stack}
+		<op> <small_expr>
+	\\
+		`(' expr `)'
+	\\
+		<id>
+	\\
+		<id> `=' <expr>
+	\\
+		<id> `('
+		\begin{repnull}
+			<expr>
+		\\
+			`,'
+		\end{repnull}
+		`)'
+	\\
+		`while' expr <body>
+	\\
+		`return' <expr>
+	\\
+		`if' expr <body> <if_rest>
+	\\
+		`['
+		\begin{repnull}
+			<expr>
+		\\
+			`,'
+		\end{repnull}
+		`]'
+	\\
+		<int>
+	\\
+		<float>
+	\\
+		<string>
+	\\
+		<char>
+	\\
+		`true'
+	\\
+		`false'
+	\\
+		`null'
+	\end{stack}
+\end{málrit}
+
+\begin{málrit}{if_rest}
+	\begin{repnull}
+		`elsif' <expr> <body>
+	\end{repnull}
+	\begin{stack}
+	\\
+		`else' <body>
+	\end{stack}
+\end{málrit}
+
+\subsubsection{Annar möguleiki}
+
+\begin{málrit}{expr}
+	\begin{stack}
+		`return' <expr>
+	\\
+		<id> `=' <expr>
+	\\
+		<or_expr>
+	\end{stack}
+\end{málrit}
+
+\begin{málrit}{or_expr}
+	\begin{rep}
+		<and_expr>
+	\\
+		`||'
+	\end{rep}
+\end{málrit}
+
+\begin{málrit}{and_expr}
+	\begin{rep}
+		<not_expr>
+	\\
+		`&&'
+	\end{rep}
+\end{málrit}
+
+\begin{málrit}{not_expr}
+	\begin{repnull}
+		`!'
+	\end{repnull}
+	<binop_expr>
+\end{málrit}
+
+\begin{málrit}{binop_expr}
+	\begin{rep}
+		<small_expr>
+	\\
+		<op>
+	\end{rep}
+\end{málrit}
+
+\begin{málrit}{small_expr}
+	\begin{stack}
+		<op> <small_expr>
+	\\
+		`(' expr `)'
+	\\
+		<id>
+		\begin{stack}
+		\\
+		`('
+		\begin{repnull}
+			<expr>
+		\\
+			`,'
+		\end{repnull}
+		`)'
+		\end{stack}
+	\\
+		`while' expr  <body>
+	\\
+		`if' expr <body> <if_rest>
+	\\
+		`['
+		\begin{repnull}
+			<expr>
+		\\
+			`,'
+		\end{repnull}
+		`]'
+	\\
+		<int>
+	\\
+		<float>
+	\\
+		<string>
+	\\
+		<char>
+	\\
+		`true'
+	\\
+		`false'
+	\\
+		`null'
+	\end{stack}
+\end{málrit}
+
+\end{document}
