@@ -41,15 +41,15 @@
 \maketitle
 
 \begin{abstract}
-Kaladin er einfalt mál sem keyrir á Morpho sýndarvélinni. Í Kaladin hafa 
-allar segðir gildi.
+Kaladin er mál sem reynir að vera eins skýrt og það getur verið, en er
+heldur einfalt hvað forritunarmál varða. Kaladin keyrir á Morpho sýndarvélinni.
 \end{abstract}
 
 \tableofcontents
 
 \section{Inngangur}
-Kaldin er einfalt mál sem þýðist yfir í Morphp smalamál, og keyrir á Morpho 
-sýndarvélinni.
+Kaladin er mál sem reynir að vera eins skýrt og það getur verið (verbose) og
+keyrir á Morpho sýndarvélinni.
 
 Kaladin má nota frá netinu í gegnum síðuna \url{kaladin.mpg.is},
 en til þess að geta keyrt skrár sem málið skilar og þýða án nettengingar,
@@ -113,17 +113,21 @@ java -jar morpho.jar initial
 \begin{grammar}
 <program> ::= <functions>
 
-<functions> ::= <functions> <function> ';'
-	 \alt <function> ';'
+<functions> ::= <functions> <function> EXPRDELIM
+	 \alt <function> EXPRDELIM
 
-<function> ::= DEF NAME '(' <optnames> ')' '\{' <optdecls> <optexprs> '\}'
+<posArgDecl> ::= NOARGSDECL
+          \alt ARGSDECL <names>
+          \alt ONEARGDECL NAME
+
+<function> ::= THE NAME DEF posArgDecl FUNDECLEND <optdecls> <optexprs>
+
 
 <names> ::= <names> ',' NAME 
       \alt NAME
 
 <optnames> ::= $\lambda$
         \alt <names>
-
 
 <args> ::= <args> ',' <expr>
     \alt <expr>
@@ -132,7 +136,7 @@ java -jar morpho.jar initial
 <optargs> ::= $\lambda$
        \alt <args>;
 
-<body> ::= '\{' <optexprs> '\}'
+<body> ::= <exprlist>
 
 <decl> ::= VAR NAME "=" <expr> 
 
@@ -143,14 +147,14 @@ java -jar morpho.jar initial
 <decls> ::= <decls> <decl> ';'
      \alt <decl> ';'
 
+<exprlist> ::= exprlist ',' <expr>
+        | <expr>
 
-<ifrest> ::= $\lambda$
-\alt ELSE <body>
-\alt ELSEIF  '(' <expr> ')' <body> <ifrest>
+<ifrest> ::= ELSE <body>
 
-<ifst> ::= IF '(' <expr> ')' <body> <ifrest>
+<ifst> ::= IF expr THEN <body> <ifrest> EXPRDELIM
 
-<whilest> ::= WHILE '(' <expr> ')' <body>
+<whilest> ::= WHILE <expr> THEN <body> EXPRDELIM
 
 
 <expr> ::= <expr> '+' <expr>             
@@ -169,6 +173,7 @@ java -jar morpho.jar initial
     \alt <expr> AND <expr>             
     \alt <expr> OR <expr>              
     \alt NOT <expr>                  
+    \alt LET NAME '=' <expr>             
     \alt NAME '=' <expr>             
     \alt NAME                      
     \alt RETURN <expr>               
@@ -182,8 +187,8 @@ java -jar morpho.jar initial
     \alt whilest
 
 
-<exprs> ::= <exprs> <expr> ';'
-     \alt <expr> ';'
+<exprs> ::= <exprs> <expr> EXPRDELIM
+     \alt <expr> EXPRDELIM
 
 <optexprs> ::= $\lambda$
      \alt <exprs>
