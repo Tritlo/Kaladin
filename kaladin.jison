@@ -199,24 +199,53 @@ optexprs:  /* empty */ { $$ = [] }
 
 var name = "initial"; 
 
+var numexpressions = 0;
+var numfunctions = 0;
+var numdecls = 0;
+var startTime = Date.now()
 if(this.process !== undefined){
-  var emit = console.log;
+  var fs = require('fs');
+  var toEmit = ""
+  var emit = function(x){
+   toEmit += x.toString();
+   toEmit += "\n";
+  };
+  //var emit = console.log;
   var debug =  console.log; 
   name =  this.process.argv[2].split(".")[0];
 } else {
-  console.log(emit);
   emit = window.emit || console.log;
   debug = window.debug || console.log;
 }
 var functions = {};
 
 var postparse = function(){
-  //console.log("parsing complete");
+  console.log("Parsing complete");
+  var parseDone = Date.now()
   createProgram();
+  var codeGenDone = Date.now()
+  if(this.process !== undefined){
+    fs.writeFile(name+".masm",toEmit,function(err){ 
+    if(err) throw err;
+    console.log("Output written to "+name+".masm");
+    console.log();
+    console.log("Stats: ");
+    console.log("Expressions: "+numexpressions);
+    console.log("Functions: "+numfunctions);
+    console.log("Declerations: "+numdecls);
+    console.log("Lines of code generated: "+ toEmit.split("\n").length);
+    console.log();
+    console.log("Performance: ");
+    console.log("Parse time: "+ (parseDone - startTime)/1000);
+    console.log("Code generation time: "+ (codeGenDone - parseDone)/1000);
+    console.log("Total time: "+ (codeGenDone-startTime)/1000);
+    });
+  }
 }
 
 
 function generateExpr(expr,exprtype){
+  numexpressions += 1;
   if(!exprtype) exprtype = "";
   var type = expr["type"];
   if(genExprType[type]) genExprType[type](expr,exprtype);
@@ -333,9 +362,11 @@ genExprType = {
 
 var nameTable = {};
 function generateDecl(decl){
- if(nameTable[decl.name] === undefined)
-     nameTable[decl.name] = newLoc();
-     emit("(Push)");
+ numdecls += 1;
+ //if(nameTable[decl.name] === undefined){
+ nameTable[decl.name] = newLoc();
+ // } else {console.log("Warning!");}
+ emit("(Push)");
 
  var loc = nameTable[decl.name];
  generateExpr(decl.expr,"");
@@ -353,6 +384,7 @@ function newLoc(){
 };
 
 function generateFunction(funcname, funcobj){
+  numfunctions += 1;
   //debug(funcobj);
   var args = funcobj.args;
   var decls = funcobj.decls;

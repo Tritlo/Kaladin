@@ -34,18 +34,42 @@
 
 \begin{document}
 \sloppy
-\title{Handbók fyrir X}
-\author{N. N.}
+\title{Handbók fyrir Kaladin}
+\author{Matthías Páll Gissurarson}
 \maketitle
 
 \begin{abstract}
-Útdráttur...
+Kaladin er einfalt mál sem keyrir á Morpho sýndarvélinni. Í Kaladin hafa 
+allar segðir gildi.
 \end{abstract}
 
 \tableofcontents
 
 \section{Inngangur}
 \section{Notkun og uppsetning}
+Kaladin má nota frá netinu í gegnum síðuna \url{kaladin.mpg.is},
+en til þess að geta keyrt skrár sem málið skilar og þýða án nettengingar,
+þá þarf að sækja málið frá github. Málið og handbók þessa má finna á
+\url{https://github.com/Tritlo/Kaladin}
+
+Kaladin þýðandinn er skrifaður í JavaScript, en til þess að þýða Kaladinskrár
+(oftast með \verb|.kal| endingu), þá þarf \verb|Node.js| að vera uppsett á
+tölvunni þar sem þýða á skrárnar, en \verb|Node.js| gerir manni
+kleyft að keyra JavaScript án vafra. Upplýsingar um \verb|Node.js| og uppsetningu
+þess má finna á \url{http://nodejs.org/}.
+
+Til þess að þýða Kaladin skrá er notuð eftirfarandi skipun úr möppunni
+þar sem \verb|kaladin.js| er í:
+
+\begin{verbatim}
+node kaladin.js initial.kal >> initial.masm
+\end{verbatim}
+
+en skipta má 
+
+Kaladin þýðist yfir í Morpho vélamál. Til þess að geta notað Kaladin, þá
+þarf Morpho að vera uppsett á tölvunni, en einnig má nota þá útgáfu af Morpho
+sem fylgir með.
 \section{Málfræði}
 \subsection{Frumeiningar málsins}
 \subsubsection{Athugasemdir}
