@@ -43,18 +43,20 @@ which is what we wanted to do.
 
 The main function, which takes no arguments, is as follows:
     We let x = 0.
-    do infi(x).
-    while x is less than 2 then 
+    We let y be while x is less than 2 then 
 	do println(f(x)), println(-x), and x = x + 1..
 
-    println("1 over 2").
-    println(1.0/2).
-    println(1/2).
-    println(1/2.0).
-    println("fibo(30) = " ++ fibo(30)).
-    println("fib(30) is " ++ fib(30)).
-    println(exprsHaveValue(1)).
-    println(exprsHaveValue(8)).
-    println(f(4.5)).
-    println(x=If 3 is less than 2 then 2 else None.).
+    Then we do infi(x).
+    Then we println("y").
+    Then we println(y).
+    Then we println("1 over 2").
+    Then we println(1.0/2).
+    Then we println(1/2).
+    Then we println(1/2.0).
+    Then we println("fibo(30) = " ++ fibo(30)).
+    Then we println("fib(30) is " ++ fib(30)).
+    Then we println(exprsHaveValue(1)).
+    Then we println(exprsHaveValue(8)).
+    Then we println(f(4.5)).
+    Then we println(x=If 3 is less than 2 then 2 else None.).
 which is what we wanted to do.

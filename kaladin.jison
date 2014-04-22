@@ -31,6 +31,12 @@
 "we let"                    return "VAR";
 "Let"                    return "LET";
 "let"                    return "LET";
+"then we do"                   return "TDO"
+"Then we do"                   return "TDO"
+"we do"                   return "TDO"
+"We do"                   return "TDO"
+"Then we"                   return "TDO"
+"then we"                   return "TDO"
 "then"                   return "THEN"
 "The"                    return "THE";
 "the"                    return "THE";
@@ -48,7 +54,7 @@
 ", and"                      return ",";
 "("                     return "(";
 ")"                     return ")";
-"=="                     return "==";
+//"=="                     return "==";
 "="                      return "=";
 //"**"                      return '^';
 "*"                      return '*';
@@ -179,17 +185,19 @@ decls: decls decl EXPRDELIM {$1.push($2); $$ = $1;}
 exprlist: exprlist ',' expr  {$1.push($3); $$ =$1;}
         | expr {$$ = [$1]};
 
-ifrest://		  /* empty */ { $$ = null }
-ELSE body  { $$ = { "type": "ELSE", "body" : $2, "rest": null}};
+POSDO: /*empty*/	| DO;
 
-ifst: IF  expr THEN body ifrest EXPRDELIM
+ifrest://		  /* empty */ { $$ = null }
+ELSE POSDO body  { $$ = { "type": "ELSE", "body" : $3, "rest": null}};
+
+ifst: IF  expr THEN POSDO body ifrest EXPRDELIM
 %{ 
-$$ = {"type": "IF", "cond": $2, "body": $4, "rest": $5} 
+$$ = {"type": "IF", "cond": $2, "body": $5, "rest": $6} 
 %};
 
-whilest: WHILE  expr THEN body EXPRDELIM
+whilest: WHILE  expr THEN POSDO body EXPRDELIM
 %{ 
-$$ = {"type": "WHILE", "cond": $2, "body": $4};
+$$ = {"type": "WHILE", "cond": $2, "body": $5};
 %};
 
 
@@ -207,7 +215,7 @@ expr: expr '+' expr             { $$ = {OP: "+", "type": "OP","subexprs": [$1,$3
     | expr '==' expr            { $$ = {OP: "==", "type": "OP","subexprs": [$1,$3]}}
     | expr "++" expr            { $$ = {OP: "++", "type": "OP","subexprs": [$1,$3]}}
     | NAME '(' optargs ')'      { $$ = {OP: $1, "type": "OP", "subexprs": $3}}
-    | DO NAME '(' optargs ')'   { $$ = {OP: $2, "type": "OP", "subexprs": $4}}
+    | TDO NAME '(' optargs ')'   { $$ = {OP: $2, "type": "OP", "subexprs": $4}}
     | expr AND expr             { $$ = {type: "AND", "subexprs": [$1,$3]}}
     | expr OR expr              { $$ = {type: "OR", "subexprs": [$1,$3]}}
     | NOT expr                  { $$ = {type: "NOT", "val": $2}}

@@ -14,6 +14,7 @@
 %\usepackage{makeidx,smplindx,fancyhdr,graphicx,times,multicol,comment}
 %\input{/home/tritlo/Dropbox/Latex/header.tex}
 \usepackage{listingsutf8}
+\usepackage{comment}
 \usepackage{times}
 \usepackage[T1]{fontenc}
 \usepackage[rounded]{syntax}
@@ -154,6 +155,12 @@ hlið við hlið. Lykilorðin eru eftirfarandi:
 ``\verb|then|'',
 ``\verb|The|'',
 ``\verb|the|'',
+``\verb|Then we do|'',
+``\verb|then we do|'',
+``\verb|We do|'',
+``\verb|we do|'',
+``\verb|then we|'',
+``\verb|Then we|'',
 ``\verb|Do|'',
 ``\verb|do|'',
 ``\verb|None|'',
@@ -171,7 +178,6 @@ Einnig eru táknin ``\verb|.|'',
 ``\verb|,| '',
 ``\verb|;| '',
 ``\verb|:| '',
-``\verb|==|'',
 ``\verb|=|'',
 %``\verb|^|'',
 ``\verb|*|'',
@@ -297,9 +303,36 @@ Return segðir geta aðeins komið fyrir inni í fallsskilgreiningum, en
 þá er reiknað út hvert gildi expr er, og það gildi sett sem skilagildi fallsins,
 og fallið látið skila.
 \subsubsection{Röksegðir}
+Eftirfarandi samanburðar segðir eru í Kaladin,
+``\verb|is less than or equal to|'',
+``\verb|is greater than or equal to|'',
+``\verb|is less than|'',
+``\verb|is greater than|'' og
 ``\verb|is|'',
-``\verb|==|'',
+en þær haga sér eins og
+\verb|<=|, \verb|>=|, \verb|<|, \verb|>| og \verb|==| haga sér í Morpho.
+
+Einnig eru eftirfarandi rökvirkjar,
+``\verb|and|'',
+``\verb|or|''
+ og ``\verb|not|''.
+Þeir haga sér eins og rökvirkjarnir $\wedge, \vee$ og $\neg$,
+en þeir skammhleypa, þ.e. að þegar þeir koma að gildi sem mundi láta gildi
+segðarinnar vera ótvírætt ákvarðarða, þá er hætt að meta gildi segðanna,
+og það gildi sem ákvarðað var verður gildi segðarinnar.
+
+Sanngildi segða í Kaladin er eins og sanngildi segða í Morpho, nema í 
+Kaladin hefur \verb|None| sama gildi og \verb|null|.
 \subsubsection{Kallsegð}
+Kall segð í Kaladin er á forminu
+``\verb|posVerbose f(x1,...,xn)|''.
+
+Þar sem posVerbose er 
+``\verb|We do|'', eða ``\verb|Then we do|'' eða ``\verb|Then we|''
+
+þar sem f er fall skilgreint í sömu skrá, eða fall úr Morpho.
+Athuguið að fjöldi inntaksstærða í fallið verður að sú sama og fallið
+er skilgreint fyrir.
 \subsubsection{Tvíundaraðgerðir}
 Eftirfarandi tvíundaraðgerðir eru í Kaladin:
 %``\verb|^|'',
@@ -326,9 +359,29 @@ breytir sanngildi segðar yfir í öfugt sanngildi, en einnig er
 \verb|-| virkinn, þ.e. mínus einnig einundarvirki, sem segir að töluna
 á eftir virkjanum eigi að túlka sem neikvæða.
 \subsubsection{if-segð}
+if-segð er á forminu
+\verb|If expr then body1 else body2.|
+eða \verb|If expr then do body1 else body2.|
+
+þar sem body1 og body2 er listi af segðum aðskilin með kommum
+þ.e. \verb|e1,e2,e3, and e4| eða bara
+\verb|e1,e2,e3, e4|.
+
+Ef sanngildi \verb|expr| er satt, þá er body1 framkvæmdur, annars
+er body2 framkvæmdir.
 \subsubsection{while-segð}
+while-segð er á forminu 
+\verb|while expr then body.|
+eða \verb|while expr then do body.|
 
+þar sem body er listi af segðum aðskilin með kommum
+þ.e. \verb|e1,e2,e3, and e4| eða bara
+\verb|e1,e2,e3, e4|.
 
+Á meðan sanngildi expr er satt, þá er body framkvæmt. Athugið að sanngildi
+while segðar er alltaf \verb|false|.
+
+\begin{comment}
 \section{Ýmis málrit með hjálp syntax pakkans í LaTeX}
 
 Hér eru nokkur málrit skilgreind með hjálp {\tt syntax} pakkans.
@@ -545,5 +598,6 @@ einfaldari með tilliti til forgangs ýmissa málfyrirbæra.
 		`null'
 	\end{stack}
 \end{málrit}
+\end{comment}
 
 \end{document}
