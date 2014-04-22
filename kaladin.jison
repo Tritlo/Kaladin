@@ -64,7 +64,7 @@
 "+"                      return '+';
 ","                      return ",";
 \"[^\"]*\"               return "STRING";
-\'[^\']*\"               return "STRING";
+\'[^\']*\'               return "STRING";
 [A-Za-z]([A-Za-z0-9])*   return "NAME";
 [0-9]+("."[0-9]+)?\b     return "NUMBER";
 \:                       return "THEN";

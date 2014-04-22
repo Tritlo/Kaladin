@@ -38,7 +38,7 @@ The infi function, whose argument is x, is as follows:
     if true or false then 
         println(x is less than or equal to 10)
      else
-        print("dem")..
+        print('dem')..
 which is what we wanted to do.
 
 The main function, which takes no arguments, is as follows:

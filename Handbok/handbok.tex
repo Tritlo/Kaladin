@@ -18,23 +18,6 @@
 \usepackage{times}
 \usepackage[T1]{fontenc}
 \usepackage[rounded]{syntax}
-\newenvironment{repnull}[0]{%
-	\begin{stack}
-	\\
-	\begin{rep}
-}{%
-	\end{rep}
-	\end{stack}
-}
-\newenvironment{málrit}[1]{%
-	\par\noindent\begin{minipage}{\linewidth}\vspace{0.5em}\begin{quote}\noindent%
-	\hspace*{-2em}\synt{#1}:\hfill\par%
-	\noindent%
-	\begin{minipage}{\linewidth}\begin{syntdiag}%
-}{%
-	\end{syntdiag}\end{minipage}\end{quote}\end{minipage}%
-}
-
 \setlength{\parskip}{8pt plus 1pt minus 1pt}
 \begin{document}
 \sloppy
@@ -42,11 +25,17 @@
 \author{Matthías Páll Gissurarson}
 \maketitle
 
+%TODO:
+%Bæta við í mállýsingu hvaða token stendur fyrir hvaða tákn.
+%Tala um í athugasemdum um hvernig bil virka, þ.e. þau skipta máli
+%inn í lykilorðunum, en annars bara eins og í Morpho.
+%Tala um í reikniaðgerðum (binop) að þær séu eins og í Morpho.
+
 \begin{abstract}
 Kaladin er mál sem reynir að vera eins skýrt og það getur verið, en er
 heldur einfalt hvað forritunarmál varða. Kaladin keyrir á Morpho sýndarvélinni.
-Kaldin er ``eager'', ``procedural'' mál, en það er bálkmótað hvað föll varðar.
-Kaladin styður ekki ``global'' breytur.
+Kaldin er ólatt skipanamál, en það er bálkmótað hvað föll varðar.
+Kaladin styður staðværar breytur.
 \end{abstract}
 
 \tableofcontents
@@ -124,10 +113,17 @@ java -jar morpho.jar initial
 \subsection{Frumeiningar málsins}
 \subsubsection{Athugasemdir}
 Athugum að fyrst að mörg lykilorð má skrifa með bæði stórum og litlum upphafsstaf,
-og er merkingin sú sama hvora leiðina sem farin er.
+og er merkingin sú sama hvora leiðina sem farin er. Bil skipta ekki mál, 
+nema hvað að bil í lykilorðum verða að vera eins og bilin eru í lykilorðum í
+listanum sem kemur hér á eftir.
+
+Ef táknið \verb|#| kemur fyrir í byrjun línu, þá er allt sem er í línunni
+á eftir því tákni hent og ekki tekið til greina.
 \subsubsection{Lykilorð}
 Lykilorð í Kaladin eru frekar mörg, en sum lykilorðin eru tvö eða fleiri orð
-hlið við hlið. Lykilorðin eru eftirfarandi:
+hlið við hlið. Ef svo er, þá verða þau að vera skrifuð
+nákvæmlega eins, þ.e. ekki má bæta við auka bili milli orðanna.
+ Lykilorðin eru eftirfarandi:
 ``\verb|function|'',
 ``\verb|While|'',
 ``\verb|while|'', 
@@ -189,6 +185,83 @@ Einnig eru táknin ``\verb|.|'',
 ``\verb|)|''
 frátekin.                      
 \subsection{Mállýsing}
+\subsubsection{Tákn}
+Í mállýsingu eru tákn innan oddklofa millitákn, tákn sem eru innan \verb|'| eru lokatákn,
+og tákn sem eru með stórum stöfum eru einnig lokatákn, en merking þeirra er gefin
+í eftirfarandi töflu:
+
+\begin{tabular}[c]{| c | c |}
+\hline
+Regluleg segð sem lýsir lokatákni í forritskóða & Tákn í mállýsingu\\ \hline
+\verb|"function"|                                   & \verb|DEF|\\ \hline
+\verb|"While"|                                      & \verb|WHILE|\\ \hline
+\verb|"while"|                                      & \verb|WHILE|\\ \hline
+\verb|"If"|                                         & \verb|IF|\\ \hline
+\verb|"if"|                                         & \verb|IF|\\ \hline
+\verb|"else"|                                       & \verb|ELSE|\\ \hline
+\verb|"and"|                                        & \verb|AND|\\ \hline
+\verb|"or"|                                         & \verb|OR|\\ \hline
+\verb|"not|                                        & \verb|NOT|\\ \hline
+\verb|", whose arguments are"|                      & \verb|ARGSDECL|\\ \hline
+\verb|", whose argument is"|                        & \verb|ONEARGDECL|\\ \hline
+\verb|", which takes no arguments"|                 & \verb|NOARGSDECL|\\ \hline
+\verb|", is as follows:"|                           & \verb|FUNCDECLEND|\\ \hline
+\verb|"true"|                                       & \verb|TRUE|\\ \hline
+\verb|"True"|                                       & \verb|TRUE|\\ \hline
+\verb|"false"|                                      & \verb|FALSE|\\ \hline
+\verb|"False"|                                      & \verb|FALSE|\\ \hline
+\verb|"Return"|                                     & \verb|RETURN|\\ \hline
+\verb|"return"|                                     & \verb|RETURN|\\ \hline
+\verb|"We let"|                       & \verb|VAR|\\ \hline
+\verb|"we let"|                       & \verb|VAR|\\ \hline
+\verb|"Let"|                          & \verb|LET|\\ \hline
+\verb|"let"|                          & \verb|LET|\\ \hline
+\verb|"then we do"|                   & \verb|TDO|\\ \hline
+\verb|"Then we do"|                   & \verb|TDO|\\ \hline
+\verb|"we do"|                        & \verb|TDO|\\ \hline
+\verb|"We do"|                        & \verb|TDO|\\ \hline
+\verb|"Then we"|                      & \verb|TDO|\\ \hline
+\verb|"then we"|                      & \verb|TDO|\\ \hline
+\end{tabular}
+
+
+\begin{tabular}[c]{| c | c |}
+\hline
+Regluleg segð sem lýsir lokatákni í forritskóða & Tákn í mállýsingu\\ \hline
+\verb|"then"|                         & \verb|THEN|\\ \hline
+\verb|"The"|                          & \verb|THE|\\ \hline
+\verb|"the"|                          & \verb|THE|\\ \hline
+\verb|"Do"|                          & \verb|DO|\\ \hline
+\verb|"do"|                          & \verb|DO|\\ \hline
+\verb|"None"|                         & \verb|NONE|\\ \hline
+\verb|"in"|                           & \verb|IN|\\ \hline
+\verb|"be"|                            & \verb|=|\\ \hline
+\verb|"which is what we wanted to do."|                      & \verb|EXPRDELIM|\\ \hline
+\verb|"is less than or equal to"|                       & \verb|<=|\\ \hline
+\verb|"is greater than or equal to"|                       & \verb|>=|\\ \hline
+\verb|"is less than"|                       & \verb|<|\\ \hline
+\verb|"is greater than"|                       & \verb|>|\\ \hline
+\verb|"is"|                     & \verb|==|\\ \hline
+\verb|", and"|                      & \verb|,|\\ \hline
+\verb|"("|                     & \verb|(|\\ \hline
+\verb|")"|                     & \verb|)|\\ \hline
+\verb|"="|                      & \verb|=|\\ \hline
+\verb|"*"|                      & \verb|*|\\ \hline
+\verb|"/"|                      & \verb|/|\\ \hline
+\verb|"++"|                     & \verb|++|\\ \hline
+\verb|"-"|                      & \verb|-|\\ \hline
+\verb|"+"|                      & \verb|+|\\ \hline
+\verb|","|                      & \verb|,|\\ \hline
+\verb|\"[^\"]*\"|               & \verb|STRING|\\ \hline
+\verb|\'[^\']*\'|               & \verb|STRING|\\ \hline
+\verb|[A-Za-z]([A-Za-z0-9])*|   & \verb|NAME|\\ \hline
+\verb|[0-9]+("."[0-9]+)?\b|     & \verb|NUMBER|\\ \hline
+\verb|\:|                       & \verb|THEN|\\ \hline
+\verb|\;|                       & \verb|EXPRDELIM|\\ \hline
+\verb|\.|                       & \verb|EXPRDELIM|\\ \hline
+\end{tabular}
+
+\subsubsection{BNF mállýsing}
 \begin{grammar}
 <program> ::= <functions>
 
@@ -283,17 +356,23 @@ Breytur í kaladin er skilgreindar með því að segja
 Hægt er að breyta gildi breytu með því að segja \verb|x = expr| eða
 \verb|Let x be expr| eða  \verb|Let x = expr|
 \subsection{Merking segða}
-\subsubsection{Heiltölusegð}
+\subsubsection{Bókstafssegðir}
+\paragraph{None-segð}
+\verb|None| segð hefur sömu merkingu og \verb|null| í Morpho.
+\paragraph{Heiltölusegð}
 Heiltölu segð er segð á forminu \verb|a|, þar sem a má vera hvaða heiltala
-sem er, og gildi hennar er heiltalan a.
-\subsubsection{Fleytitölusegð}
+sem er, og gildi hennar er heiltalan a. Hún fær sama gildi og samsvarandi
+segð í Morpho.
+\paragraph{Fleytitölusegð}
 Fleytitölu segð er segð á forminu \verb|b|, þar sem b má vera hvaða fleytitala
-sem er, og gildi hennar er fleytitalan b.
-\subsubsection{Strengsegð}
+sem er, og gildi hennar er fleytitalan b. Hún fær sama gildi og samsvarandi
+segð í Morpho.
+\paragraph{Strengsegð}
 Strengsegð er runa stafa, núll eða fleiri, sem afmarkaðir eru með
-\verb|"| eða \verb|'|.
-%\subsubsection{Stafsegð}
-%\subsubsection{Listasegð}
+\verb|"| eða \verb|'|. Hún fær sama gildi og samsvarandi segð í Morpho.
+\paragraph{Sanngildissegð}
+\verb|True| hefur sömu merkingu og \verb|true| í Morpho.
+\verb|False| hefur sömu merkingu og \verb|false| í Morpho.
 \subsubsection{return-segð}
 Return segðir eru á forminu \verb|Return expr|,
 þar sem að expr er einhver lögleg Kaladin segð.
@@ -310,7 +389,8 @@ Eftirfarandi samanburðar segðir eru í Kaladin,
 ``\verb|is greater than|'' og
 ``\verb|is|'',
 en þær haga sér eins og
-\verb|<=|, \verb|>=|, \verb|<|, \verb|>| og \verb|==| haga sér í Morpho.
+\verb|<=|, \verb|>=|, \verb|<|, \verb|>| og \verb|==| haga sér í Morpho 
+(og er í raun bara kall á samsvarandi Morpho fall).
 
 Einnig eru eftirfarandi rökvirkjar,
 ``\verb|and|'',
@@ -328,14 +408,13 @@ Kall segð í Kaladin er á forminu
 ``\verb|posVerbose f(x1,...,xn)|''.
 
 Þar sem posVerbose er 
-``\verb|We do|'', eða ``\verb|Then we do|'' eða ``\verb|Then we|''
+``\verb|We do|'', eða ``\verb|Then we do|'' eða ``\verb|Then we|'' eða ekkert.
 
 þar sem f er fall skilgreint í sömu skrá, eða fall úr Morpho.
-Athuguið að fjöldi inntaksstærða í fallið verður að sú sama og fallið
+Athugið að fjöldi inntaksstærða í fallið verður að sú sama og fallið
 er skilgreint fyrir.
 \subsubsection{Tvíundaraðgerðir}
 Eftirfarandi tvíundaraðgerðir eru í Kaladin:
-%``\verb|^|'',
 ``\verb|*|'',
 ``\verb|/|'',
 ``\verb|-|'',
@@ -343,21 +422,11 @@ Eftirfarandi tvíundaraðgerðir eru í Kaladin:
 ``\verb|++|'',
 auk þeirra sem koma fyrir í röksegðum.
 
-Þá er gildi \verb|expr1 op expr2|, þar sem op er
-``\verb|*|'', ``\verb|/|'', ``\verb|-|'' eða ``\verb|+|''.
- það sama og maður mundi áætla fyrir venjulegan reikning ef expr1 og expr2
- eru tölur (heiltölur eða fleytitölur),
-en óskilgreint annars.
-``\verb|/|'' virkinn framkvæmir heiltalna deilingu ef bæði expr-in
-eru heiltölur, en fleytitöludeilingu annars.
-
-\verb|++| virkinn skeytir saman tveimur strengjum,
-þ.e. \verb|'abc' ++ 'bcd'| er sama og \verb|'abcbcd'|.
+Tvíundaraðgerðirnar virka eins og þær gera í Morpho og eru í raun 
 \subsubsection{Einundaraðgerðir}
 Í Kaladin eru tvær einundaraðgerðir, en það er \verb|not| virkinn, sem 
-breytir sanngildi segðar yfir í öfugt sanngildi, en einnig er 
-\verb|-| virkinn, þ.e. mínus einnig einundarvirki, sem segir að töluna
-á eftir virkjanum eigi að túlka sem neikvæða.
+breytir sanngildi segðar yfir í öfugt sanngildi.
+\verb|-| einundarvirkinn er kall á samsvarandi virkja í Morpho.
 \subsubsection{if-segð}
 if-segð er á forminu
 \verb|If expr then body1 else body2.|
@@ -367,237 +436,18 @@ eða \verb|If expr then do body1 else body2.|
 þ.e. \verb|e1,e2,e3, and e4| eða bara
 \verb|e1,e2,e3, e4|.
 
-Ef sanngildi \verb|expr| er satt, þá er body1 framkvæmdur, annars
-er body2 framkvæmdir.
+Ef sanngildi \verb|expr| er satt, þá er body1 framkvæmdur, þ.e.
+segðirnar í body1 eru gildaðar í þeirri röð sem þær koma fyrir.
+Annars er body2 framkvæmdir.
 \subsubsection{while-segð}
 while-segð er á forminu 
 \verb|while expr then body.|
 eða \verb|while expr then do body.|
 
 þar sem body er listi af segðum aðskilin með kommum
-þ.e. \verb|e1,e2,e3, and e4| eða bara
-\verb|e1,e2,e3, e4|.
+þ.e. \verb|e1,e2,e3, and e4| eða bara \verb|e1,e2,e3, e4|.
 
 Á meðan sanngildi expr er satt, þá er body framkvæmt. Athugið að sanngildi
 while segðar er alltaf \verb|false|.
-
-\begin{comment}
-\section{Ýmis málrit með hjálp syntax pakkans í LaTeX}
-
-Hér eru nokkur málrit skilgreind með hjálp {\tt syntax} pakkans.
-Breytið þessu eftir þörfum, eða notið aðrar
-aðferðir ef það hentar ykkur betur.
-
-Finna má upplýsingar um {\tt syntax} pakkann
-\htmladdnormallinkfoot{á vefnum}{http://www.tug.org/texlive/Contents/live/texmf-dist/doc/latex/mdwtools/syntax.pdf}.
-
-Takið eftir að ráðlegt er að gera einhverjar breytingar hér,
-þó ekki væri til annars en að gera textalýsingar á merkingu
-einfaldari með tilliti til forgangs ýmissa málfyrirbæra.
-
-\begin{málrit}{id_list}
-	\begin{stack}
-	
-	\\
-		\begin{rep} <id> \\ `,' \end{rep}
-	\end{stack}
-\end{málrit}%
-
-\subsubsection{Forrit}
-
-\begin{málrit}{program}
-	\begin{rep}
-		<function>
-	\end{rep}
-\end{málrit}
-
-\subsubsection{Föll}
-
-\begin{málrit}{function}
-	<id> `(' <id_list> `)' <body>
-\end{málrit}
-
-\subsubsection{Stofnar}
-\begin{málrit}{body}
-	`{' 
-	<decls>
-	\begin{repnull} <expr> `;' \end{repnull}
-	`}' 
-\end{málrit}
-
-\subsubsection{Skilgreiningar}
-\begin{málrit}{decls}
-	\begin{repnull}
-		\begin{stack}
-			`var' \begin{rep} <id> \\ `,' \end{rep} `;'
-		\\
-			`val' \begin{rep} <id> `=' <expr> \\ `,' \end{rep} `;'
-		\end{stack}
-	\end{repnull}
-\end{málrit}
-
-\subsubsection{Segðir}
-
-\begin{málrit}{expr}
-	\begin{rep}
-		<small_expr>
-	\\
-		\begin{stack}
-			<op>
-		\\
-			`&&'
-		\\
-			`||'
-		\end{stack}
-	\end{rep}
-\end{málrit}
-
-\begin{málrit}{small_expr}
-	\begin{stack}
-		<op> <small_expr>
-	\\
-		`(' expr `)'
-	\\
-		<id>
-	\\
-		<id> `=' <expr>
-	\\
-		<id> `('
-		\begin{repnull}
-			<expr>
-		\\
-			`,'
-		\end{repnull}
-		`)'
-	\\
-		`while' expr <body>
-	\\
-		`return' <expr>
-	\\
-		`if' expr <body> <if_rest>
-	\\
-		`['
-		\begin{repnull}
-			<expr>
-		\\
-			`,'
-		\end{repnull}
-		`]'
-	\\
-		<int>
-	\\
-		<float>
-	\\
-		<string>
-	\\
-		<char>
-	\\
-		`true'
-	\\
-		`false'
-	\\
-		`null'
-	\end{stack}
-\end{málrit}
-
-\begin{málrit}{if_rest}
-	\begin{repnull}
-		`elsif' <expr> <body>
-	\end{repnull}
-	\begin{stack}
-	\\
-		`else' <body>
-	\end{stack}
-\end{málrit}
-
-\subsubsection{Annar möguleiki}
-
-\begin{málrit}{expr}
-	\begin{stack}
-		`return' <expr>
-	\\
-		<id> `=' <expr>
-	\\
-		<or_expr>
-	\end{stack}
-\end{málrit}
-
-\begin{málrit}{or_expr}
-	\begin{rep}
-		<and_expr>
-	\\
-		`||'
-	\end{rep}
-\end{málrit}
-
-\begin{málrit}{and_expr}
-	\begin{rep}
-		<not_expr>
-	\\
-		`&&'
-	\end{rep}
-\end{málrit}
-
-\begin{málrit}{not_expr}
-	\begin{repnull}
-		`!'
-	\end{repnull}
-	<binop_expr>
-\end{málrit}
-
-\begin{málrit}{binop_expr}
-	\begin{rep}
-		<small_expr>
-	\\
-		<op>
-	\end{rep}
-\end{málrit}
-
-\begin{málrit}{small_expr}
-	\begin{stack}
-		<op> <small_expr>
-	\\
-		`(' expr `)'
-	\\
-		<id>
-		\begin{stack}
-		\\
-		`('
-		\begin{repnull}
-			<expr>
-		\\
-			`,'
-		\end{repnull}
-		`)'
-		\end{stack}
-	\\
-		`while' expr  <body>
-	\\
-		`if' expr <body> <if_rest>
-	\\
-		`['
-		\begin{repnull}
-			<expr>
-		\\
-			`,'
-		\end{repnull}
-		`]'
-	\\
-		<int>
-	\\
-		<float>
-	\\
-		<string>
-	\\
-		<char>
-	\\
-		`true'
-	\\
-		`false'
-	\\
-		`null'
-	\end{stack}
-\end{málrit}
-\end{comment}
 
 \end{document}
