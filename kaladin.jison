@@ -21,7 +21,7 @@
 ", which takes no arguments"                    return "NOARGSDECL";
 ", is as follows:"                    return "FUNCDECLEND";
 "true"                   return "TRUE";
-"and return "                   return "ANDRET";
+//"and return "                   return "ANDRET";
 "True"                   return "TRUE";
 "false"                  return "FALSE";
 "False"                  return "FALSE";
@@ -50,7 +50,7 @@
 ")"                     return ")";
 "=="                     return "==";
 "="                      return "=";
-"^"                      return '^';
+//"**"                      return '^';
 "*"                      return '*';
 "/"                      return '/';
 "++"                     return '++';
@@ -110,7 +110,7 @@
 %left '++'
 %left '+', '-'
 %left '*', '/'
-%left '^'
+//%left '^'
 %left UMINUS
 
 
@@ -198,7 +198,7 @@ expr: expr '+' expr             { $$ = {OP: "+", "type": "OP","subexprs": [$1,$3
     | expr '-' expr             { $$ = {OP: "-", "type": "OP","subexprs": [$1,$3]}}
     | expr '*' expr             { $$ = {OP: "*", "type": "OP","subexprs": [$1,$3]}}
     | expr '/' expr             { $$ = {OP: "/", "type": "OP","subexprs": [$1,$3]}}
-    | expr '^' expr             { $$ = {OP: "^", "type": "OP","subexprs": [$1,$3]}}
+    //| expr '^' expr             { $$ = {OP: "**", "type": "OP","subexprs": [$1,$3]}}
     | '-' expr %prec UMINUS     { $$ = {OP: "-", "type":"OP", "subexprs": [$2]}}
     | expr '<=' expr            { $$ = {OP: "<=", "type": "OP","subexprs": [$1,$3]}}
     | expr '>=' expr            { $$ = {OP: ">=", "type": "OP","subexprs": [$1,$3]}}

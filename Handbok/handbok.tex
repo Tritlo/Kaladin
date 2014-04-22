@@ -122,6 +122,8 @@ java -jar morpho.jar initial
 \section{Málfræði}
 \subsection{Frumeiningar málsins}
 \subsubsection{Athugasemdir}
+Athugum að fyrst að mörg lykilorð má skrifa með bæði stórum og litlum upphafsstaf,
+og er merkingin sú sama hvora leiðina sem farin er.
 \subsubsection{Lykilorð}
 Lykilorð í Kaladin eru frekar mörg, en sum lykilorðin eru tvö eða fleiri orð
 hlið við hlið. Lykilorðin eru eftirfarandi:
@@ -138,9 +140,9 @@ hlið við hlið. Lykilorðin eru eftirfarandi:
 ``\verb|, whose argument is|'',
 ``\verb|, which takes no arguments|'',
 ``\verb|, is as follows:|'',
-``\verb|true|'',
-``\verb|and return |'',
+%``\verb|and return |'',
 ``\verb|True|'',
+``\verb|true|'',
 ``\verb|false|'',
 ``\verb|False|'',
 ``\verb|Return|'',
@@ -171,7 +173,7 @@ Einnig eru táknin ``\verb|.|'',
 ``\verb|:| '',
 ``\verb|==|'',
 ``\verb|=|'',
-``\verb|^|'',
+%``\verb|^|'',
 ``\verb|*|'',
 ``\verb|/|'',
 ``\verb|++|'',
@@ -266,18 +268,63 @@ frátekin.
 \end{grammar}
 \section{Merking málsins}
 \subsection{Gildi}
+Gildi í Kaladin geta verið strengir, heiltölur, fleytitölur,
+True, False og None.
 \subsection{Breytur}
+Breytur í kaladin er skilgreindar með því að segja
+\verb|We let x be expr|, þar sem að expr er einhver lögleg Kaladin segð.
+
+Hægt er að breyta gildi breytu með því að segja \verb|x = expr| eða
+\verb|Let x be expr| eða  \verb|Let x = expr|
 \subsection{Merking segða}
 \subsubsection{Heiltölusegð}
+Heiltölu segð er segð á forminu \verb|a|, þar sem a má vera hvaða heiltala
+sem er, og gildi hennar er heiltalan a.
 \subsubsection{Fleytitölusegð}
-\subsubsection{Stafsegð}
+Fleytitölu segð er segð á forminu \verb|b|, þar sem b má vera hvaða fleytitala
+sem er, og gildi hennar er fleytitalan b.
 \subsubsection{Strengsegð}
-\subsubsection{Listasegð}
+Strengsegð er runa stafa, núll eða fleiri, sem afmarkaðir eru með
+\verb|"| eða \verb|'|.
+%\subsubsection{Stafsegð}
+%\subsubsection{Listasegð}
 \subsubsection{return-segð}
+Return segðir eru á forminu \verb|Return expr|,
+þar sem að expr er einhver lögleg Kaladin segð.
+
+Return segðir geta aðeins komið fyrir inni í fallsskilgreiningum, en
+þegar að Return segð kemur fyrir í keyrslu,
+þá er reiknað út hvert gildi expr er, og það gildi sett sem skilagildi fallsins,
+og fallið látið skila.
 \subsubsection{Röksegðir}
+``\verb|is|'',
+``\verb|==|'',
 \subsubsection{Kallsegð}
 \subsubsection{Tvíundaraðgerðir}
+Eftirfarandi tvíundaraðgerðir eru í Kaladin:
+%``\verb|^|'',
+``\verb|*|'',
+``\verb|/|'',
+``\verb|-|'',
+``\verb|+|'',
+``\verb|++|'',
+auk þeirra sem koma fyrir í röksegðum.
+
+Þá er gildi \verb|expr1 op expr2|, þar sem op er
+``\verb|*|'', ``\verb|/|'', ``\verb|-|'' eða ``\verb|+|''.
+ það sama og maður mundi áætla fyrir venjulegan reikning ef expr1 og expr2
+ eru tölur (heiltölur eða fleytitölur),
+en óskilgreint annars.
+``\verb|/|'' virkinn framkvæmir heiltalna deilingu ef bæði expr-in
+eru heiltölur, en fleytitöludeilingu annars.
+
+\verb|++| virkinn skeytir saman tveimur strengjum,
+þ.e. \verb|'abc' ++ 'bcd'| er sama og \verb|'abcbcd'|.
 \subsubsection{Einundaraðgerðir}
+Í Kaladin eru tvær einundaraðgerðir, en það er \verb|not| virkinn, sem 
+breytir sanngildi segðar yfir í öfugt sanngildi, en einnig er 
+\verb|-| virkinn, þ.e. mínus einnig einundarvirki, sem segir að töluna
+á eftir virkjanum eigi að túlka sem neikvæða.
 \subsubsection{if-segð}
 \subsubsection{while-segð}
 

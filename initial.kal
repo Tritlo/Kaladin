@@ -47,8 +47,12 @@ The main function, which takes no arguments, is as follows:
     while x is less than 2 then 
 	do println(f(x)), println(-x), and x = x + 1..
 
+    println("1 over 2").
+    println(1.0/2).
+    println(1/2).
+    println(1/2.0).
     println("fibo(30) = " ++ fibo(30)).
-    println("fibo2(30) is " ++ fibo2(30)).
+    println("fib(30) is " ++ fib(30)).
     println(exprsHaveValue(1)).
     println(exprsHaveValue(8)).
     println(f(4.5)).
