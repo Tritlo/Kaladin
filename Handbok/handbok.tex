@@ -35,7 +35,7 @@
 Kaladin er mál sem reynir að vera eins skýrt og það getur verið, en er
 heldur einfalt hvað forritunarmál varða. Kaladin keyrir á Morpho sýndarvélinni.
 Kaldin er ólatt skipanamál, en það er bálkmótað hvað föll varðar.
-Kaladin styður staðværar breytur.
+Kaladin styður einungis staðværar breytur.
 \end{abstract}
 
 \tableofcontents
@@ -422,7 +422,8 @@ Eftirfarandi tvíundaraðgerðir eru í Kaladin:
 ``\verb|++|'',
 auk þeirra sem koma fyrir í röksegðum.
 
-Tvíundaraðgerðirnar virka eins og þær gera í Morpho og eru í raun 
+Tvíundaraðgerðirnar virka eins og þær gera í Morpho, og eru í raun
+bara kall á samsvarandi fall í Morpho.
 \subsubsection{Einundaraðgerðir}
 Í Kaladin eru tvær einundaraðgerðir, en það er \verb|not| virkinn, sem 
 breytir sanngildi segðar yfir í öfugt sanngildi.
@@ -438,7 +439,7 @@ eða \verb|If expr then do body1 else body2.|
 
 Ef sanngildi \verb|expr| er satt, þá er body1 framkvæmdur, þ.e.
 segðirnar í body1 eru gildaðar í þeirri röð sem þær koma fyrir.
-Annars er body2 framkvæmdir.
+Annars er body2 framkvæmdur.
 \subsubsection{while-segð}
 while-segð er á forminu 
 \verb|while expr then body.|
@@ -447,7 +448,7 @@ eða \verb|while expr then do body.|
 þar sem body er listi af segðum aðskilin með kommum
 þ.e. \verb|e1,e2,e3, and e4| eða bara \verb|e1,e2,e3, e4|.
 
-Á meðan sanngildi expr er satt, þá er body framkvæmt. Athugið að sanngildi
+Á meðan sanngildi expr er satt, þá er body framkvæmt, annars er hætt. Athugið að sanngildi
 while segðar er alltaf \verb|false|.
 
 \end{document}
